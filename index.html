@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missão Almoxarifado - Logística Ágil</title>
+<style>
+:root{
+  --azul:#075aa8; --azul2:#0b75c9; --laranja:#f28c28; --verde:#18864b;
+  --vermelho:#b42318; --cinza:#eef2f6; --escuro:#17324d; --branco:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#e9eef3;color:#1f2937}
+header{background:linear-gradient(135deg,#075aa8,#17324d);color:white;padding:18px}
+header .wrap{max-width:1100px;margin:auto;display:flex;gap:18px;align-items:center}
+.logo{font-weight:900;font-size:28px;letter-spacing:1px}
+header h1{margin:0;font-size:22px}
+header p{margin:4px 0 0;opacity:.9}
+main{max-width:1100px;margin:20px auto;padding:0 14px 60px}
+.card{background:white;border-radius:14px;padding:20px;margin:0 0 18px;box-shadow:0 3px 14px rgba(0,0,0,.08)}
+.hidden{display:none!important}
+h2,h3{color:var(--escuro)}
+button{border:0;border-radius:10px;padding:12px 16px;font-size:16px;font-weight:700;cursor:pointer}
+.btn{background:var(--azul);color:white}
+.btn:hover{background:var(--azul2)}
+.btn2{background:#e7eef7;color:var(--escuro)}
+.btnDanger{background:var(--vermelho);color:white}
+input,textarea,select{width:100%;padding:11px;border:1px solid #b9c5d1;border-radius:8px;font-size:16px;background:white}
+textarea{min-height:100px;resize:vertical}
+label{display:block;font-weight:700;margin:12px 0 6px}
+.callout{border-left:5px solid var(--laranja);background:#fff7ed;padding:14px;border-radius:8px;margin:12px 0}
+.conceito{border-left:5px solid var(--azul);background:#eff7ff;padding:14px;border-radius:8px;margin:12px 0}
+.pesquisa{border-left:5px solid #7c3aed;background:#f6f0ff;padding:14px;border-radius:8px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.option{border:2px solid #d5dee8;border-radius:12px;padding:14px;cursor:pointer;background:#fff;min-height:100px}
+.option:hover{border-color:var(--azul)}
+.option.selected{border-color:var(--azul);background:#eef7ff}
+.progressWrap{background:#dce4ec;border-radius:99px;overflow:hidden;height:14px;margin-top:10px}
+.progress{height:100%;background:var(--verde);width:0;transition:.3s}
+.status{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
+.badge{display:inline-block;background:#eef2f6;border-radius:999px;padding:6px 10px;font-weight:700}
+.feedback{padding:10px 12px;border-radius:8px;margin-top:10px;font-weight:700}
+.ok{background:#eaf8ef;color:#176b3a}
+.erro{background:#fff0ef;color:#9f261f}
+.warehouse{background:#f7fafc;border:2px dashed #a8b4c0;border-radius:12px;padding:12px}
+.zonegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.zone{min-height:86px;border:2px dashed #aab7c4;border-radius:10px;padding:8px;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-size:14px}
+.pieces{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.piece{background:#eaf2fa;border:1px solid #9cb5cc;border-radius:9px;padding:9px 11px;cursor:grab}
+.small{font-size:13px;color:#5f6b76}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccd5df;padding:8px;text-align:left;vertical-align:top}
+th{background:#edf2f7}
+.reportTitle{text-align:center;border-bottom:3px solid var(--azul);padding-bottom:12px}
+.meter{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}
+.meter div{background:#f4f7fa;border-radius:10px;padding:10px;flex:1;min-width:150px}
+@media(max-width:600px){.zonegrid{grid-template-columns:1fr 1fr}.logo{font-size:22px}header h1{font-size:18px}}
+@media print{
+  body{background:white}
+  header,.noPrint,#gameSections{display:none!important}
+  #finalReport{display:block!important;box-shadow:none;margin:0;padding:0}
+  main{max-width:none;margin:0;padding:0}
+  .card{box-shadow:none}
+  textarea,input{border:0;padding:0}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="logo">SENAI</div>
+    <div>
+      <h1>MISSÃO ALMOXARIFADO — Operação Logística Ágil</h1>
+      <p>Projeto individual • Unidade Curricular: Armazenagem</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="start" class="card">
+  <h2>🏭 Você foi chamado para uma missão</h2>
+  <p>A empresa <b>Logística Ágil Ltda.</b> cresceu rápido e o almoxarifado ficou desorganizado. Há falhas no fluxo, problemas de localização, materiais armazenados de forma inadequada e registros pouco confiáveis.</p>
+  <div class="callout"><b>Seu desafio:</b> investigar o almoxarifado, tomar decisões e construir um Plano de Armazenagem melhor. Durante o projeto, você também fará pequenas pesquisas na internet e registrará as fontes no padrão ABNT.</div>
+  <label for="student">Nome do(a) operador(a)</label>
+  <input id="student" placeholder="Digite seu nome completo">
+  <label for="date">Data</label>
+  <input id="date" type="date">
+  <div class="nav"><span></span><button class="btn" id="startBtn">Iniciar missão</button></div>
+</section>
+
+<section id="gameSections" class="hidden">
+  <div class="card noPrint">
+    <div class="status"><span class="badge" id="missionBadge">Missão 1 de 9</span><span class="badge">Pontuação: <span id="score">0</span>/100</span></div>
+    <div class="progressWrap"><div id="progress" class="progress"></div></div>
+  </div>
+
+  <section class="card mission" data-mission="1">
+    <h2>🔎 Missão 1 — Inspeção inicial</h2>
+    <div class="conceito"><b>Conceito:</b> armazenagem não é apenas “guardar caixas”. Um bom processo organiza o recebimento, a conferência, a movimentação, a localização, a conservação e a saída dos materiais. O objetivo é reduzir perdas, deslocamentos desnecessários e erros.</div>
+    <p>Ao entrar no galpão, você encontra quatro situações. Selecione <b>as duas que representam problemas claros de armazenagem</b>.</p>
+    <div class="grid multi" data-answer="a,c" data-points="8">
+      <div class="option" data-value="a">📦 Caixas bloqueando parte de um corredor de circulação.</div>
+      <div class="option" data-value="b">🏷️ Materiais identificados com código e endereço.</div>
+      <div class="option" data-value="c">⚠️ Produto avariado misturado com produtos em boas condições.</div>
+      <div class="option" data-value="d">🧹 Área de trabalho limpa e demarcada.</div>
+    </div>
+    <button class="btn2 checkMulti">Conferir decisão</button><div class="feedback hidden"></div>
+    <label>Explique, com suas palavras, por que essas situações prejudicam o almoxarifado.</label>
+    <textarea data-key="m1exp" placeholder="Escreva sua explicação..."></textarea>
+    <div class="nav"><span></span><button class="btn next">Próxima missão</button></div>
+  </section>
+
+  <section class="card mission hidden" data-mission="2">
+    <h2>🚦 Missão 2 — Organize o fluxo</h2>
+    <div class="conceito"><b>Conceito:</b> o fluxo mostra o caminho que o material percorre. Quanto mais confuso, cruzado e cheio de idas e voltas, maior a chance de atraso, acidente e retrabalho.</div>
+    <p>Qual sequência apresenta um fluxo mais lógico para um material que acabou de chegar e será armazenado?</p>
+    <div class="grid single" data-answer="b" data-points="8">
+      <div class="option" data-value="a">Armazenar → Receber → Conferir → Identificar</div>
+      <div class="option" data-value="b">Receber → Conferir → Identificar/Registrar → Armazenar</div>
+      <div class="option" data-value="c">Separar → Expedir → Receber → Armazenar</div>
+      <div class="option" data-value="d">Receber → Expedir → Conferir → Armazenar</div>
+    </div>
+    <button class="btn2 checkSingle">Conferir decisão</button><div class="feedback hidden"></div>
+    <label>Imagine que a conferência fica muito longe do recebimento. Que problema isso pode causar?</label>
+    <textarea data-key="m2exp" placeholder="Relacione distância, tempo, movimentação e risco..."></textarea>
+    <div class="nav"><button class="btn2 prev">Voltar</button><button class="btn next">Próxima missão</button></div>
+  </section>
+
+  <section class="card mission hidden" data-mission="3">
+    <h2>🏗️ Missão 3 — Estruturas de armazenagem</h2>
+    <div class="conceito"><b>Conceito:</b> diferentes materiais exigem diferentes estruturas. Porta-pallets favorecem cargas paletizadas; prateleiras são comuns para itens menores; estruturas do tipo cantilever ajudam a armazenar materiais longos, como tubos e perfis.</div>
+    <p>A empresa recebeu <b>tubos metálicos de 5 metros</b>. Qual estrutura é mais coerente?</p>
+    <div class="grid single" data-answer="c" data-points="8">
+      <div class="option" data-value="a">Gaveteiro pequeno</div>
+      <div class="option" data-value="b">Prateleira leve para caixas pequenas</div>
+      <div class="option" data-value="c">Estrutura tipo cantilever para materiais longos</div>
+      <div class="option" data-value="d">Empilhamento aleatório no chão</div>
+    </div>
+    <button class="btn2 checkSingle">Conferir decisão</button><div class="feedback hidden"></div>
+
+    <div class="pesquisa">
+      <h3>🌐 Pesquisa orientada</h3>
+      <p>Pesquise na internet: <b>“tipos de estruturas de armazenagem industrial”</b>. Escolha uma fonte confiável e descubra uma estrutura que não foi explicada acima.</p>
+      <label>Nome da estrutura encontrada</label><input data-key="m3estrutura">
+      <label>Para que ela é utilizada?</label><textarea data-key="m3uso"></textarea>
+      <label>Referência em ABNT</label>
+      <textarea data-key="m3ref" placeholder="Ex.: NOME DA INSTITUIÇÃO ou AUTOR. Título da página. Nome do site, ano. Disponível em: endereço eletrônico. Acesso em: dia mês abreviado. ano."></textarea>
+      <p class="small">Não copie apenas o link. Registre autor/instituição, título, site, data quando houver, endereço e data de acesso.</p>
+    </div>
+    <div class="nav"><button class="btn2 prev">Voltar</button><button class="btn next">Próxima missão</button></div>
+  </section>
+
+  <section class="card mission hidden" data-mission="4">
+    <h2>🚜 Missão 4 — Movimentação de materiais</h2>
+    <div class="conceito"><b>Conceito:</b> o equipamento de movimentação deve ser escolhido considerando peso, formato da carga, distância, altura e segurança. O objetivo não é usar o equipamento “mais forte”, mas o mais adequado.</div>
+    <p>Você precisa movimentar um pallet pesado do recebimento até uma posição elevada em porta-pallets. Qual opção é mais adequada?</p>
+    <div class="grid single" data-answer="d" data-points="8">
+      <div class="option" data-value="a">Carrinho de supermercado</div>
+      <div class="option" data-value="b">Transporte manual por uma pessoa</div>
+      <div class="option" data-value="c">Carrinho plataforma, mesmo para elevar a carga</div>
+      <div class="option" data-value="d">Empilhadeira compatível com a carga e a altura</div>
+    </div>
+    <button class="btn2 checkSingle">Conferir decisão</button><div class="feedback hidden"></div>
+    <label>Quais informações você verificaria antes de escolher um equipamento de movimentação?</label>
+    <textarea data-key="m4exp"></textarea>
+    <div class="nav"><button class="btn2 prev">Voltar</button><button class="btn next">Próxima missão</button></div>
+  </section>
+
+  <section class="card mission hidden" data-mission="5">
+    <h2>🗺️ Missão 5 — Monte o novo almoxarifado</h2>
+    <div class="conceito"><b>Conceito:</b> um bom leiaute reduz cruzamentos e deslocamentos desnecessários. Áreas que fazem parte de uma sequência de trabalho geralmente devem ter relação de proximidade.</div>
+    <p>Monte abaixo uma proposta simples. Clique em uma área e depois clique na posição do galpão onde deseja colocá-la. Você pode mudar de posição quantas vezes quiser.</p>
+    <div class="pieces" id="pieces">
+      <button type="button" class="piece" data-name="Expedição">🚛 Expedição</button>
+      <button type="button" class="piece" data-name="Armazenagem">📦 Armazenagem</button>
+      <button type="button" class="piece" data-name="Recebimento">🚚 Recebimento</button>
+      <button type="button" class="piece" data-name="Resíduos">♻️ Resíduos</button>
+      <button type="button" class="piece" data-name="Separação">🧾 Separação</button>
+      <button type="button" class="piece" data-name="Conferência">🔍 Conferência</button>
+    </div>
+    <div class="warehouse">
+      <div class="zonegrid" id="zonegrid">
+        <button type="button" class="zone" data-zone="1">Posição 1</button>
+        <button type="button" class="zone" data-zone="2">Posição 2</button>
+        <button type="button" class="zone" data-zone="3">Posição 3</button>
+        <button type="button" class="zone" data-zone="4">Posição 4</button>
+        <button type="button" class="zone" data-zone="5">Posição 5</button>
+        <button type="button" class="zone" data-zone="6">Posição 6</button>
+      </div>
+    </div>
+    <label>Justifique sua proposta de leiaute. Explique principalmente a relação entre recebimento, conferência, armazenagem, separação e expedição.</label>
+    <textarea data-key="m5just"></textarea>
+    <div class="nav"><button class="btn2 prev">Voltar</button><button class="btn next">Próxima missão</button></div>
+  </section>
+
+  <section class="card mission hidden" data-mission="6">
+    <h2>🏷️ Missão 6 — Codificação e endereçamento</h2>
+    <div class="conceito"><b>Conceito:</b> codificar é criar uma identificação padronizada para o material. Endereçar é indicar exatamente onde ele está no estoque. Um endereço pode representar, por exemplo, corredor, estrutura, nível e posição.</div>
+    <p>Considere o endereço <b>A-03-02-B</b>. Nesta empresa, o padrão é: <b>Corredor – Estrutura – Nível – Posição</b>.</p>
+    <p>O que significa o número <b>02</b>?</p>
+    <div class="grid single" data-answer="c" data-points="8">
+      <div class="option" data-value="a">Corredor</div>
+      <div class="option" data-value="b">Estrutura</div>
+      <div class="option" data-value="c">Nível</div>
+      <div class="option" data-value="d">Quantidade</div>
+    </div>
+    <button class="btn2 checkSingle">Conferir decisão</button><div class="feedback hidden"></div>
+    <label>Crie um endereço para um produto localizado no corredor C, estrutura 05, nível 04, posição A.</label>
+    <input data-key="m6end" placeholder="Digite no padrão apresentado">
+    <div class="nav"><button class="btn2 prev">Voltar</button><button class="btn next">Próxima missão</button></div>
+  </section>
+
+  <section class="card mission hidden" data-mission="7">
+    <h2>💻 Missão 7 — Controle informatizado do armazém</h2>
+    <div class="conceito"><b>Conceito:</b> um WMS (Warehouse Management System) é um sistema usado para apoiar o controle das operações de armazenagem. Ele pode registrar recebimentos, posições, saldos, movimentações, separações e saídas.</div>
+    <p><b>Ordem de recebimento:</b> chegaram 30 caixas do item P-105, lote L0826. O sistema informa que o endereço C-05-04-A está disponível.</p>
+    <p>Qual sequência é mais coerente?</p>
+    <div class="grid single" data-answer="a" data-points="8">
+      <div class="option" data-value="a">Conferir → registrar entrada → direcionar ao endereço → armazenar e confirmar localização</div>
+      <div class="option" data-value="b">Armazenar em qualquer lugar → depois tentar descobrir onde ficou</div>
+      <div class="option" data-value="c">Expedir primeiro → conferir depois</div>
+      <div class="option" data-value="d">Registrar a saída do produto</div>
+    </div>
+    <button class="btn2 checkSingle">Conferir decisão</button><div class="feedback hidden"></div>
+
+    <div class="pesquisa">
+      <h3>🌐 Pesquisa orientada</h3>
+      <p>Pesquise: <b>“o que é WMS logística”</b>. Consulte uma fonte confiável.</p>
+      <label>Explique o que é WMS com suas palavras, sem copiar.</label>
+      <textarea data-key="m7wms"></textarea>
+      <label>Cite duas informações que um WMS pode controlar.</label>
+      <textarea data-key="m7info"></textarea>
+      <label>Referência em ABNT</label>
+      <textarea data-key="m7ref" placeholder="Registre a referência da página consultada no modelo ABNT."></textarea>
+    </div>
+    <div class="nav"><button class="btn2 prev">Voltar</button><button class="btn next">Próxima missão</button></div>
+  </section>
+
+  <section class="card mission hidden" data-mission="8">
+    <h2>⚠️ Missão 8 — Auditoria e não conformidades</h2>
+    <div class="conceito"><b>Conceito:</b> uma não conformidade é uma situação que não atende ao padrão, procedimento ou condição esperada. O registro deve ser objetivo: o que aconteceu, onde aconteceu, qual o risco e que ação deve ser tomada.</div>
+    <p>Durante a auditoria você encontra: <b>5 caixas amassadas misturadas aos produtos liberados para uso.</b> Qual é a melhor primeira atitude?</p>
+    <div class="grid single" data-answer="b" data-points="8">
+      <div class="option" data-value="a">Ignorar porque são apenas cinco caixas</div>
+      <div class="option" data-value="b">Identificar e segregar o material, registrar a ocorrência e seguir o procedimento da empresa</div>
+      <div class="option" data-value="c">Mandar o material diretamente para o cliente</div>
+      <div class="option" data-value="d">Esconder as caixas para liberar espaço</div>
+    </div>
+    <button class="btn2 checkSingle">Conferir decisão</button><div class="feedback hidden"></div>
+    <label>Faça um pequeno Registro de Não Conformidade: descreva o fato, o risco e a ação recomendada.</label>
+    <textarea data-key="m8rnc"></textarea>
+    <div class="nav"><button class="btn2 prev">Voltar</button><button class="btn next">Próxima missão</button></div>
+  </section>
+
+  <section class="card mission hidden" data-mission="9">
+    <h2>🏆 Missão 9 — Plano de Armazenagem Final</h2>
+    <div class="conceito"><b>Conceito:</b> o plano de armazenagem reúne decisões sobre fluxo, leiaute, estruturas, equipamentos, identificação, endereçamento, controle, segurança e tratamento das não conformidades.</div>
+
+    <div class="pesquisa">
+      <h3>🌐 Pesquisa final — segurança e materiais perigosos</h3>
+      <p>Pesquise em fonte confiável orientações gerais sobre <b>armazenamento seguro de produtos químicos ou materiais perigosos</b>. Não escolha procedimentos específicos para executar; o objetivo é compreender princípios gerais de identificação, sinalização, separação e consulta às informações de segurança.</p>
+      <label>Registre três cuidados gerais encontrados.</label>
+      <textarea data-key="m9cuidados"></textarea>
+      <label>Referência em ABNT</label>
+      <textarea data-key="m9ref"></textarea>
+    </div>
+
+    <h3>Seu plano final</h3>
+    <div class="callout" id="chosenProblemsBox">
+      <b>Relembre sua inspeção:</b>
+      <p id="chosenProblemsText">Você escolheu problemas na inspeção inicial. Revise-os antes de elaborar seu plano.</p>
+      <p><b>Agora elabore um Plano Final para corrigir esses problemas e melhorar o almoxarifado como um todo.</b></p>
+    </div>
+    <label>1. Pensando nos problemas que você identificou, qual é a principal melhoria que você faria no fluxo?</label>
+    <textarea data-key="m9fluxo"></textarea>
+    <label>2. Como você organizaria a identificação e o endereçamento?</label>
+    <textarea data-key="m9end"></textarea>
+    <label>3. Como reduziria erros, avarias e materiais fora do lugar?</label>
+    <textarea data-key="m9erros"></textarea>
+    <label>4. Em até 6 linhas, apresente sua solução para a direção da empresa.</label>
+    <textarea data-key="m9defesa"></textarea>
+
+    <div class="nav"><button class="btn2 prev">Voltar</button><button class="btn" id="finish">Finalizar projeto e gerar relatório</button></div>
+  </section>
+</section>
+
+<section id="finalReport" class="card hidden">
+  <div class="reportTitle">
+    <h2>RELATÓRIO FINAL — MISSÃO ALMOXARIFADO</h2>
+    <p>Projeto Individual de Armazenagem</p>
+  </div>
+  <p><b>Aluno(a):</b> <span id="rName"></span><br><b>Data:</b> <span id="rDate"></span><br><b>Pontuação objetiva:</b> <span id="rScore"></span>/100</p>
+  <div class="meter">
+    <div><b>Diagnóstico</b><br>Identificação de problemas e justificativas.</div>
+    <div><b>Organização</b><br>Fluxo, leiaute e endereçamento.</div>
+    <div><b>Tecnologia</b><br>Uso conceitual de WMS.</div>
+    <div><b>Qualidade</b><br>Não conformidades e prevenção.</div>
+  </div>
+  <div id="reportContent"></div>
+  <div class="callout"><b>Orientação:</b> clique no botão abaixo. Na janela de impressão do navegador, escolha a opção <b>Salvar como PDF</b>.</div>
+  <div class="nav noPrint">
+    <button class="btn2" id="backToGame">Voltar ao projeto</button>
+    <button class="btn" id="printBtn">🖨️ Imprimir / Salvar em PDF</button>
+  </div>
+</section>
+</main>
+
+<script>
+(function(){
+const missions=[...document.querySelectorAll('.mission')];
+let current=0, score=0;
+const scored=new Set();
+const state={answers:{}, layout:{}, problemChoices:[]};
+const $=s=>document.querySelector(s);
+
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function save(){
+  document.querySelectorAll('[data-key]').forEach(el=>state.answers[el.dataset.key]=el.value);
+  localStorage.setItem('missaoAlmoxarifado',JSON.stringify({
+    student:$('#student').value,date:$('#date').value,current,score,
+    scored:[...scored],answers:state.answers,layout:state.layout,problemChoices:state.problemChoices
+  }));
+}
+function restore(){
+  try{
+    const x=JSON.parse(localStorage.getItem('missaoAlmoxarifado')||'null'); if(!x)return;
+    $('#student').value=x.student||''; $('#date').value=x.date||'';
+    score=x.score||0; (x.scored||[]).forEach(v=>scored.add(v));
+    state.answers=x.answers||{}; state.layout=x.layout||{}; state.problemChoices=x.problemChoices||[];
+    document.querySelectorAll('[data-key]').forEach(el=>{if(state.answers[el.dataset.key]!=null)el.value=state.answers[el.dataset.key]});
+    Object.entries(state.layout).forEach(([z,n])=>{const el=document.querySelector('.zone[data-zone="'+z+'"]');if(el)el.textContent=n});
+    const m1=document.querySelector('.mission[data-mission="1"] .multi');
+    if(m1){
+      m1.querySelectorAll('.option').forEach(o=>o.classList.toggle('selected',(state.problemChoices||[]).includes(o.dataset.value)));
+    }
+    updateChosenProblems();
+  }catch(e){}
+}
+function updateChosenProblems(){
+  const box=document.querySelector('#chosenProblemsText');
+  if(!box)return;
+  const labels={
+    a:'caixas bloqueando parte de um corredor de circulação',
+    b:'materiais identificados com código e endereço',
+    c:'produto avariado misturado com produtos em boas condições',
+    d:'área de trabalho limpa e demarcada'
+  };
+  const chosen=(state.problemChoices||[]).map(v=>labels[v]).filter(Boolean);
+  if(chosen.length){
+    box.innerHTML='<b>Você escolheu estes problemas:</b> '+chosen.map(x=>'“'+esc(x)+'”').join(' e ')+'.';
+  }else{
+    box.textContent='Você ainda não registrou os problemas da inspeção inicial. Volte à Missão 1 e faça sua escolha antes de concluir.';
+  }
+}
+function update(){
+  $('#score').textContent=score;
+  $('#missionBadge').textContent=`Missão ${current+1} de ${missions.length}`;
+  $('#progress').style.width=((current+1)/missions.length*100)+'%';
+  missions.forEach((m,i)=>m.classList.toggle('hidden',i!==current));
+  updateChosenProblems();
+  save(); window.scrollTo({top:0,behavior:'smooth'});
+}
+function selectHandler(container,multi){
+  container.querySelectorAll('.option').forEach(o=>o.addEventListener('click',()=>{
+    if(!multi) container.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));
+    o.classList.toggle('selected');
+    const mission=container.closest('.mission');
+    if(mission && mission.dataset.mission==='1'){
+      state.problemChoices=[...container.querySelectorAll('.option.selected')].map(x=>x.dataset.value);
+      updateChosenProblems();
+      save();
+    }
+  }));
+}
+document.querySelectorAll('.single').forEach(c=>selectHandler(c,false));
+document.querySelectorAll('.multi').forEach(c=>selectHandler(c,true));
+
+function check(container,feedback){
+  const sel=[...container.querySelectorAll('.option.selected')].map(x=>x.dataset.value).sort().join(',');
+  const ans=container.dataset.answer.split(',').sort().join(',');
+  const id='m'+container.closest('.mission').dataset.mission+'-'+container.dataset.answer;
+  feedback.classList.remove('hidden','ok','erro');
+  if(sel===ans){
+    feedback.textContent='✅ Decisão coerente. Continue e registre sua justificativa.';
+    feedback.classList.add('ok');
+    if(!scored.has(id)){score+=Number(container.dataset.points||0);scored.add(id);}
+  }else{
+    feedback.textContent='⚠️ Revise o conceito acima e tente novamente. Você pode alterar sua resposta antes de seguir.';
+    feedback.classList.add('erro');
+  }
+  update(); missions[current].classList.remove('hidden');
+}
+document.querySelectorAll('.checkSingle').forEach(b=>b.addEventListener('click',()=>check(b.previousElementSibling,b.nextElementSibling)));
+document.querySelectorAll('.checkMulti').forEach(b=>b.addEventListener('click',()=>check(b.previousElementSibling,b.nextElementSibling)));
+
+document.querySelectorAll('[data-key]').forEach(el=>el.addEventListener('input',save));
+document.querySelectorAll('.next').forEach(b=>b.addEventListener('click',()=>{save(); if(current<missions.length-1){current++;update();}}));
+document.querySelectorAll('.prev').forEach(b=>b.addEventListener('click',()=>{save(); if(current>0){current--;update();}}));
+
+let selectedPiece=null;
+document.querySelectorAll('.piece').forEach(p=>p.addEventListener('click',()=>{
+  selectedPiece=p.dataset.name;
+  document.querySelectorAll('.piece').forEach(x=>x.style.outline='');
+  p.style.outline='3px solid #075aa8';
+}));
+document.querySelectorAll('.zone').forEach(z=>z.addEventListener('click',()=>{
+  if(!selectedPiece)return;
+  Object.keys(state.layout).forEach(k=>{if(state.layout[k]===selectedPiece){delete state.layout[k]; const old=document.querySelector('.zone[data-zone="'+k+'"]'); if(old)old.textContent='Posição '+k;}});
+  state.layout[z.dataset.zone]=selectedPiece; z.textContent=selectedPiece; save();
+}));
+
+$('#startBtn').addEventListener('click',()=>{
+  if(!$('#student').value.trim()){alert('Digite seu nome para iniciar.');return;}
+  $('#start').classList.add('hidden'); $('#gameSections').classList.remove('hidden'); update();
+});
+$('#finish').addEventListener('click',()=>{
+  save();
+  // Pontos de conclusão: até 36 pontos para registros discursivos/pesquisas preenchidos.
+  const keys=['m1exp','m2exp','m3estrutura','m3uso','m3ref','m4exp','m5just','m6end','m7wms','m7info','m7ref','m8rnc','m9cuidados','m9ref','m9fluxo','m9end','m9erros','m9defesa'];
+  const completion=keys.filter(k=>(state.answers[k]||'').trim().length>=10).length;
+  const completionPoints=Math.min(36,completion*2);
+  const objective=Math.min(64,score);
+  score=Math.min(100,objective+completionPoints);
+
+  $('#gameSections').classList.add('hidden'); $('#finalReport').classList.remove('hidden');
+  $('#rName').textContent=$('#student').value; $('#rDate').textContent=$('#date').value.split('-').reverse().join('/'); $('#rScore').textContent=score;
+  const L=state.layout;
+  const layoutText=Object.keys(L).length ? Object.entries(L).map(([k,v])=>`Posição ${k}: ${v}`).join(' | ') : 'Não registrado';
+  const a=state.answers;
+  $('#reportContent').innerHTML=`
+    <h3>1. Diagnóstico inicial</h3>
+    <p><b>Problemas escolhidos na inspeção:</b> ${esc((state.problemChoices||[]).map(v=>({a:'Caixas bloqueando corredor',b:'Materiais identificados corretamente',c:'Produto avariado misturado aos produtos liberados',d:'Área limpa e demarcada'}[v])).filter(Boolean).join(' | ') || 'Não registrado')}</p>
+    <p>${esc(a.m1exp)}</p>
+    <h3>2. Análise do fluxo</h3><p>${esc(a.m2exp)}</p>
+    <h3>3. Estruturas de armazenagem — pesquisa</h3>
+    <p><b>Estrutura pesquisada:</b> ${esc(a.m3estrutura)}<br><b>Utilização:</b> ${esc(a.m3uso)}</p>
+    <p><b>Referência ABNT:</b> ${esc(a.m3ref)}</p>
+    <h3>4. Movimentação de materiais</h3><p>${esc(a.m4exp)}</p>
+    <h3>5. Leiaute proposto</h3><p><b>Distribuição:</b> ${esc(layoutText)}</p><p><b>Justificativa:</b> ${esc(a.m5just)}</p>
+    <h3>6. Codificação e endereçamento</h3><p><b>Endereço criado:</b> ${esc(a.m6end)}</p>
+    <h3>7. Controle informatizado — WMS</h3><p><b>Conceito:</b> ${esc(a.m7wms)}</p><p><b>Informações controladas:</b> ${esc(a.m7info)}</p><p><b>Referência ABNT:</b> ${esc(a.m7ref)}</p>
+    <h3>8. Registro de Não Conformidade</h3><p>${esc(a.m8rnc)}</p>
+    <h3>9. Pesquisa — materiais perigosos</h3><p>${esc(a.m9cuidados)}</p><p><b>Referência ABNT:</b> ${esc(a.m9ref)}</p>
+    <h3>10. Plano de Armazenagem Final</h3>
+    <p><b>Melhoria no fluxo:</b> ${esc(a.m9fluxo)}</p>
+    <p><b>Identificação e endereçamento:</b> ${esc(a.m9end)}</p>
+    <p><b>Prevenção de erros e avarias:</b> ${esc(a.m9erros)}</p>
+    <p><b>Defesa da solução:</b> ${esc(a.m9defesa)}</p>
+  `;
+  save(); window.scrollTo({top:0,behavior:'smooth'});
+});
+$('#printBtn').addEventListener('click',()=>window.print());
+$('#backToGame').addEventListener('click',()=>{$('#finalReport').classList.add('hidden');$('#gameSections').classList.remove('hidden');update();});
+restore();
+if(!$('#date').value) $('#date').value=new Date().toISOString().slice(0,10);
+})();
+</script>
+</body>
+</html>
