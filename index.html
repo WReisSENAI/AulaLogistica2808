@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Batalha Digital - Sistema Operacional & Editor de Textos</title>
+    <title>Batalha Simultânea de Informática</title>
     <style>
         * {
             box-sizing: border-box;
@@ -11,8 +11,7 @@
             padding: 0;
             user-select: none;
             -webkit-user-select: none;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* OTIMIZAÇÃO CRÍTICA PARA TV INTERATIVA: Desativa gestos de zoom/rolagem do navegador */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
@@ -26,16 +25,17 @@
             overflow: hidden;
         }
 
-        /* BANNER SUPERIOR / CABEÇALHO DA RODADA */
+        /* CABEÇALHO COMPARTILHADO */
         header {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            padding: 12px 20px;
+            background: #1e293b;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 4px solid #334155;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 10;
+            height: 80px;
         }
 
         .score-box {
@@ -44,73 +44,52 @@
             gap: 15px;
             padding: 8px 20px;
             border-radius: 12px;
-            font-size: 1.4rem;
-            font-weight: bold;
+            font-size: 1.2rem;
+            font-weight: 800;
         }
 
-        .score-a {
-            background-color: rgba(14, 165, 233, 0.2);
-            border: 2px solid #0ea5e9;
-            color: #38bdf8;
-        }
-
-        .score-b {
-            background-color: rgba(244, 63, 94, 0.2);
-            border: 2px solid #f43f5e;
-            color: #fb7185;
-        }
+        .score-a { background-color: rgba(14, 165, 233, 0.2); border: 2px solid #0ea5e9; color: #38bdf8; }
+        .score-b { background-color: rgba(244, 63, 94, 0.2); border: 2px solid #f43f5e; color: #fb7185; }
 
         .score-val {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 900;
         }
 
-        .prompt-container {
-            text-align: center;
-            flex-grow: 1;
-            margin: 0 20px;
-            background: #1e293b;
-            padding: 10px 15px;
+        .timer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timer-box {
+            background-color: #0284c7;
+            color: #ffffff;
+            font-size: 2.2rem;
+            font-weight: 900;
+            padding: 4px 25px;
             border-radius: 12px;
-            border: 2px solid #475569;
+            border: 2px solid #38bdf8;
+            min-width: 140px;
+            text-align: center;
         }
 
-        .prompt-category {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #94a3b8;
-            font-weight: 700;
+        .timer-box.warning {
+            background-color: #dc2626;
+            border-color: #fca5a5;
+            animation: pulse 0.8s infinite alternate;
         }
 
-        .prompt-text {
-            font-size: 1.3rem;
-            color: #facc15;
-            font-weight: 800;
-            margin-top: 2px;
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
         }
 
-        .btn-control {
-            background-color: #334155;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-control:active {
-            background-color: #475569;
-        }
-
-        /* ARENA DE JOGO (TELA DIVIDIDA) */
+        /* ARENA COM DIVISÃO DE TELA */
         main {
             display: flex;
             flex-grow: 1;
-            height: calc(100vh - 85px);
+            height: calc(100vh - 80px);
             position: relative;
         }
 
@@ -127,208 +106,249 @@
             flex-direction: column;
             padding: 15px;
             gap: 12px;
-            position: relative;
+            overflow-y: auto;
         }
 
-        .team-side.side-a {
-            background-color: #082f49;
-        }
-
-        .team-side.side-b {
-            background-color: #4c0519;
-        }
+        .side-a { background-color: #082f49; }
+        .side-b { background-color: #4c0519; }
 
         .team-title {
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 800;
             letter-spacing: 1px;
-            opacity: 0.8;
-            margin-bottom: 5px;
+            opacity: 0.9;
+            padding: 4px;
+            border-radius: 8px;
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 12px;
-            flex-grow: 1;
-        }
+        .side-a .team-title { background-color: rgba(14, 165, 233, 0.3); color: #7dd3fc; }
+        .side-b .team-title { background-color: rgba(244, 63, 94, 0.3); color: #fca5a5; }
 
-        /* CARDS CLICÁVEIS */
-        .card {
+        /* CARDS E BOTÕES */
+        .question-card {
             background: #1e293b;
-            border: 3px solid #475569;
+            border: 2px solid #475569;
             border-radius: 14px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            min-height: 110px;
             display: flex;
             flex-direction: column;
+            justify-content: center;
+        }
+
+        .q-number {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .q-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #f8fafc;
+            line-height: 1.3;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .option-btn {
+            background: #1e293b;
+            border: 2px solid #475569;
+            border-radius: 12px;
+            padding: 12px 15px;
+            color: #f1f5f9;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 60px;
+        }
+
+        .opt-letter {
+            background: #334155;
+            color: #facc15;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .side-a .card:active {
-            transform: scale(0.95);
-            border-color: #0ea5e9;
-        }
-
-        .side-b .card:active {
-            transform: scale(0.95);
-            border-color: #f43f5e;
-        }
-
-        .card-icon {
-            font-size: 2.2rem;
-            margin-bottom: 6px;
-            pointer-events: none;
-        }
-
-        .card-title {
             font-size: 1rem;
-            font-weight: 700;
-            color: #f1f5f9;
-            line-height: 1.2;
-            pointer-events: none;
+            font-weight: 900;
+            flex-shrink: 0;
         }
 
-        /* ANIMAÇÕES DE FEEDBACK */
-        .wrong-flash {
-            animation: flashRed 0.5s ease-in-out;
-            pointer-events: none;
+        /* ANIMAÇÕES DE ACERTO/ERRO */
+        .opt-correct {
+            background: #15803d !important;
+            border-color: #22c55e !important;
+            color: #ffffff !important;
         }
 
-        @keyframes flashRed {
-            0%, 100% { background-color: #1e293b; border-color: #475569; }
-            50% { background-color: #7f1d1d; border-color: #ef4444; }
+        .opt-wrong {
+            background: #b91c1c !important;
+            border-color: #ef4444 !important;
+            color: #ffffff !important;
         }
 
-        /* TELA DE VITÓRIA / FIM DE JOGO */
-        .modal {
-            position: absolute;
+        /* TELA DE OVERLAY DE INÍCIO / FIM */
+        .overlay {
+            position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(15, 23, 42, 0.96);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 100;
+            padding: 20px;
+            text-align: center;
         }
 
-        .modal.hidden {
-            display: none;
-        }
+        .hidden { display: none !important; }
 
         .modal-title {
-            font-size: 3rem;
+            font-size: 2.8rem;
             font-weight: 900;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: #facc15;
         }
 
         .modal-desc {
-            font-size: 1.5rem;
-            margin-bottom: 25px;
+            font-size: 1.4rem;
             color: #cbd5e1;
+            margin-bottom: 30px;
+            max-width: 700px;
+            line-height: 1.4;
         }
 
-        .btn-restart {
+        .btn-start {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 800;
-            padding: 15px 40px;
+            padding: 16px 45px;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
         }
     </style>
 </head>
 <body>
 
+    <!-- CABEÇALHO COM PLACAR SIMULTÂNEO -->
     <header>
         <div class="score-box score-a">
-            <span>EQUIPE AZUL</span>
+            <span>AZUL</span>
             <span class="score-val" id="score-a">0</span>
         </div>
 
-        <div class="prompt-container">
-            <div class="prompt-category" id="prompt-category">SISTEMA OPERACIONAL</div>
-            <div class="prompt-text" id="prompt-text">Toque na opção correspondente!</div>
+        <div class="timer-container">
+            <div class="timer-box" id="timer-display">03:00</div>
         </div>
 
         <div class="score-box score-b">
             <span class="score-val" id="score-b">0</span>
-            <span>EQUIPE VERMELHA</span>
+            <span>VERMELHO</span>
         </div>
-
-        <button class="btn-control" id="btn-reset" style="margin-left: 15px;">Reiniciar</button>
     </header>
 
+    <!-- ARENA DE COMPETIÇÃO PARALELA -->
     <main>
+        <!-- LADO ESQUERDO: EQUIPE AZUL -->
         <section class="team-side side-a">
-            <div class="team-title">🟦 LADO AZUL</div>
-            <div class="grid-container" id="grid-a"></div>
+            <div class="team-title">🟦 EQUIPE AZUL</div>
+            <div class="question-card">
+                <div class="q-number" id="q-number-a">Pergunta 1</div>
+                <div class="q-text" id="q-text-a">Aguardando início...</div>
+            </div>
+            <div class="options-grid" id="options-a"></div>
         </section>
 
         <div class="divider"></div>
 
+        <!-- LADO DIREITO: EQUIPE VERMELHA -->
         <section class="team-side side-b">
-            <div class="team-title">🟥 LADO VERMELHO</div>
-            <div class="grid-container" id="grid-b"></div>
+            <div class="team-title">🟥 EQUIPE VERMELHA</div>
+            <div class="question-card">
+                <div class="q-number" id="q-number-b">Pergunta 1</div>
+                <div class="q-text" id="q-text-b">Aguardando início...</div>
+            </div>
+            <div class="options-grid" id="options-b"></div>
         </section>
-
-        <div class="modal hidden" id="modal-winner">
-            <div class="modal-title" id="winner-title">VENCEDOR!</div>
-            <div class="modal-desc" id="winner-desc">Parabéns pelo conhecimento em Informática!</div>
-            <button class="btn-restart" id="btn-restart">Jogar Novamente</button>
-        </div>
     </main>
 
+    <!-- TELA INICIAL -->
+    <div class="overlay" id="screen-start">
+        <div class="modal-title">⚡ BATALHA SIMULTÂNEA DIGITAL</div>
+        <div class="modal-desc">
+            As duas equipes jogarão <strong>ao mesmo tempo</strong> na TV Interativa!<br><br>
+            Cada lado possui suas próprias perguntas. Vocês têm <strong>3 minutos (180 segundos)</strong> para responder o máximo de questões possíveis.
+        </div>
+        <button class="btn-start" id="btn-start-game">INICIAR PARTIDA 🚀</button>
+    </div>
+
+    <!-- TELA FINAL -->
+    <div class="overlay hidden" id="screen-final">
+        <div class="modal-title" id="final-title">FIM DE JOGO!</div>
+        <div class="modal-desc" id="final-desc">Calculando pontuação...</div>
+        <button class="btn-start" id="btn-restart">JOGAR NOVAMENTE 🔄</button>
+    </div>
+
     <script>
-        const componentsData = [
-            { id: 'barra_tarefas', title: 'Barra de Tarefas', icon: '💻', category: 'SISTEMA OPERACIONAL', desc: 'Onde ficam os programas abertos e o botão do Menu Iniciar.' },
-            { id: 'area_trabalho', title: 'Área de Trabalho', icon: '🖥️', category: 'SISTEMA OPERACIONAL', desc: 'Tela principal com o papel de parede e os ícones principais.' },
-            { id: 'atalho', title: 'Criar Atalho', icon: '↗️', category: 'SISTEMA OPERACIONAL', desc: 'Ícone com setinha que abre rapidamente um programa ou arquivo.' },
-            { id: 'diretorio', title: 'Pastas / Diretórios', icon: '📁', category: 'SISTEMA OPERACIONAL', desc: 'Local usado para guardar, organizar e separar seus arquivos.' },
-            { id: 'compactacao', title: 'Compactar (ZIP/RAR)', icon: '🗜️', category: 'SISTEMA OPERACIONAL', desc: 'Ferramenta que reduz o tamanho dos arquivos para economizar espaço.' },
-            { id: 'acessorios', title: 'Acessórios', icon: '🧮', category: 'SISTEMA OPERACIONAL', desc: 'Programas nativos simples como Calculadora e Bloco de Notas.' },
-            { id: 'pesquisa', title: 'Pesquisa de Arquivos', icon: '🔍', category: 'SISTEMA OPERACIONAL', desc: 'Campo da lupa para encontrar documentos e programas sumidos.' },
-            { id: 'ferramentas_sistema', title: 'Ferramentas de Sistema', icon: '⚙️', category: 'SISTEMA OPERACIONAL', desc: 'Utilitários de manutenção como Limpeza de Disco e Gerenciador.' },
-            { id: 'formatacao_texto', title: 'Formatação de Texto', icon: '🎨', category: 'EDITOR DE TEXTOS', desc: 'Alterar a fonte, cor, tamanho, negrito (B), itálico (I) e sublinhado.' },
-            { id: 'margens_recuos', title: 'Margens e Recuos', icon: '📏', category: 'EDITOR DE TEXTOS', desc: 'Ajustar o espaço em branco ao redor da folha e início do parágrafo.' },
-            { id: 'quebra_pagina', title: 'Quebra de Página', icon: '📄', category: 'EDITOR DE TEXTOS', desc: 'Empurra o conteúdo restante diretamente para o início da próxima página.' },
-            { id: 'tabelas_graficos', title: 'Tabelas e Gráficos', icon: '📊', category: 'EDITOR DE TEXTOS', desc: 'Inserir grades organizadas com linhas/colunas ou dados visuais.' },
-            { id: 'correcao_ortografica', title: 'Correção Ortográfica', icon: '✔️', category: 'EDITOR DE TEXTOS', desc: 'Ferramenta que identifica erros de digitação com linhas onduladas.' },
-            { id: 'marcadores', title: 'Marcadores e Lista', icon: '🔢', category: 'EDITOR DE TEXTOS', desc: 'Criar listas organizadas com tópicos (bolinhas) ou números (1, 2, 3).' },
-            { id: 'bordas_sombreamento', title: 'Bordas e Fundo', icon: '🖼️', category: 'EDITOR DE TEXTOS', desc: 'Adicionar molduras e cores de fundo em parágrafos ou caixas.' },
-            { id: 'colunas', title: 'Formatar em Colunas', icon: '📰', category: 'EDITOR DE TEXTOS', desc: 'Dividir o texto na página em duas ou mais faixas (estilo jornal).' },
-            { id: 'figuras_objetos', title: 'Inserir Imagens', icon: '🖼️', category: 'EDITOR DE TEXTOS', desc: 'Importar ilustrações, fotos ou formas para ilustrar o documento.' },
-            { id: 'inclusao_digital', title: 'Letramento Digital', icon: '🌐', category: 'INCLUSÃO DIGITAL', desc: 'Saber usar a tecnologia com consciência, autonomia e ética.' }
+        // BANCO DE PERGUNTAS
+        const questionsDatabase = [
+            { q: "Qual é a função principal de um Sistema Operacional?", options: ["Gerenciar o hardware e rodar programas", "Editar fotos e criar vídeos", "Navegar na internet sem rede", "Proteger o monitor contra poeira"], correct: 0 },
+            { q: "O que é a Área de Trabalho (Desktop)?", options: ["Uma pasta de vírus oculta", "A tela inicial após a inicialização", "O aplicativo de digitar texto", "O gabinete físico do PC"], correct: 1 },
+            { q: "Qual elemento exibe os programas abertos e o relógio?", options: ["Painel de Controle", "Barra de Tarefas", "Bloco de Notas", "Lixeira"], correct: 1 },
+            { q: "O que é um 'Atalho' no Sistema Operacional?", options: ["Um programa de limpeza", "Um arquivo corrompido", "Um ícone com seta para acesso rápido", "Uma tecla que desliga a TV"], correct: 2 },
+            { q: "Para que servem os Diretórios (Pastas)?", options: ["Para armazenar energia", "Para organizar e agrupar arquivos", "Para acelerar o Wi-Fi", "Para criar gráficos automáticos"], correct: 1 },
+            { q: "O que acontece ao 'Compactar' um arquivo (ZIP/RAR)?", options: ["O arquivo é excluído", "Sua cor é alterada", "O tamanho é reduzido para economizar espaço", "Ele vira uma imagem JPEG"], correct: 2 },
+            { q: "O que é considerado um 'Acessório' do sistema?", options: ["O teclado e o mouse", "A Calculadora ou Bloco de Notas", "O monitor de tela curva", "A placa de vídeo"], correct: 1 },
+            { q: "Para que serve a ferramenta 'Limpeza de Disco'?", options: ["Limpar a tela física", "Remover arquivos temporários inutilizados", "Formatar o computador", "Organizar os ícones da tela"], correct: 1 },
+            { q: "O que significa 'Letramento Digital'?", options: ["Digitar rápido sem olhar", "Usar a tecnologia com autonomia e ética", "Ter mais de dois computadores", "Saber consertar eletrônicos"], correct: 1 },
+            { q: "Para onde vão os arquivos excluídos do computador?", options: ["Menu Iniciar", "Lixeira", "Downloads", "Nuvem"], correct: 1 },
+            { q: "Qual recurso ajusta o início de um parágrafo?", options: ["Recuo de Parágrafo", "Quebra de Página", "Marcadores", "Sombreamento"], correct: 0 },
+            { q: "O que faz a 'Quebra de Página'?", options: ["Apaga a página atual", "Envia o texto seguinte para a próxima página", "Divide a folha ao meio", "Imprime o documento"], correct: 1 },
+            { q: "O que indica uma linha ondulada vermelha sob uma palavra?", options: ["Um link de site", "Texto em negrito", "Um possível erro ortográfico", "Um comando salvo"], correct: 2 },
+            { q: "Para que servem os 'Marcadores e Numeração'?", options: ["Criar listas organizadas em tópicos ou números", "Contar as páginas do texto", "Mudar a cor de fundo", "Inserir bordas na folha"], correct: 0 },
+            { q: "Como dividimos o texto de uma folha em faixas verticais?", options: ["Tabelas", "Formatação em Colunas", "Layout Horizontal", "Espaçamento Duplo"], correct: 1 },
+            { q: "Qual a diferença entre 'Salvar' e 'Salvar Como'?", options: ["Não há diferença", "'Salvar Como' permite alterar o nome ou local", "'Salvar' apaga o arquivo antigo", "'Salvar Como' envia e-mail"], correct: 1 },
+            { q: "O que é a orientação de página no modo 'Paisagem'?", options: ["A folha na vertical (em pé)", "A folha na horizontal (deitada)", "A folha dividida em 4 partes", "Um slide de apresentação"], correct: 1 },
+            { q: "Qual é o atalho de teclado para Copiar um texto?", options: ["Ctrl + V", "Ctrl + X", "Ctrl + C", "Ctrl + Z"], correct: 2 },
+            { q: "O que faz o 'Alinhamento Justificado'?", options: ["Alinha o texto à esquerda", "Centraliza o texto na folha", "Distribui o texto entre as duas margens", "Aumenta o tamanho da letra"], correct: 2 },
+            { q: "Para que serve a 'Barra de Ferramentas / Faixa de Opções'?", options: ["Agrupar os botões de comandos e formatação", "Exibir os e-mails recebidos", "Mostrar a bateria do notebook", "Conectar ao Wi-Fi"], correct: 0 }
         ];
 
-        let scoreA = 0;
-        let scoreB = 0;
-        let currentRound = 0;
-        let rounds = [];
-        let activeComponents = [];
-        let isLockedA = false;
-        let isLockedB = false;
+        // ESTADO INDEPENDENTE DAS EQUIPES
+        let stateA = { score: 0, index: 0, questions: [], isBlocked: false };
+        let stateB = { score: 0, index: 0, questions: [], isBlocked: false };
 
-        // ÁUDIO SEGURO
+        let timerSeconds = 180;
+        let timerInterval = null;
+
+        // EFEITOS SONOROS (WEB AUDIO API)
         let audioCtx = null;
-        
         function playSound(type) {
             try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
@@ -337,170 +357,173 @@
                 if (type === 'correct') {
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2);
-                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
                     osc.start();
-                    osc.stop(audioCtx.currentTime + 0.25);
+                    osc.stop(audioCtx.currentTime + 0.2);
                 } else if (type === 'wrong') {
                     osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(130, audioCtx.currentTime + 0.1);
-                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(120, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
                     osc.start();
-                    osc.stop(audioCtx.currentTime + 0.3);
-                } else if (type === 'win') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(554.37, audioCtx.currentTime + 0.1);
-                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2);
-                    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.3);
-                    gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.6);
+                    osc.stop(audioCtx.currentTime + 0.2);
                 }
-            } catch (e) {
-                console.log("Áudio não disponível na TV");
-            }
+            } catch (e) {}
         }
 
         function shuffle(array) {
             return [...array].sort(() => Math.random() - 0.5);
         }
 
-        function initGame() {
-            scoreA = 0;
-            scoreB = 0;
-            currentRound = 0;
+        // INICIAR O JOGO SIMULTÂNEO
+        function startGame() {
+            stateA = { score: 0, index: 0, questions: shuffle(questionsDatabase), isBlocked: false };
+            stateB = { score: 0, index: 0, questions: shuffle(questionsDatabase), isBlocked: false };
+
+            timerSeconds = 180;
             updateScores();
+            updateTimerDisplay();
 
-            activeComponents = shuffle(componentsData).slice(0, 9);
-            rounds = shuffle(activeComponents);
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-final').classList.add('hidden');
 
-            renderGrids();
-            nextRound();
+            renderTeamQuestion('A');
+            renderTeamQuestion('B');
 
-            document.getElementById('modal-winner').classList.add('hidden');
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+
+                if (timerSeconds <= 0) {
+                    endGame();
+                }
+            }, 1000);
         }
 
-        function renderGrids() {
-            const gridA = document.getElementById('grid-a');
-            const gridB = document.getElementById('grid-b');
-
-            gridA.innerHTML = '';
-            gridB.innerHTML = '';
-
-            activeComponents.forEach(comp => {
-                gridA.appendChild(createCard(comp, 'A'));
-            });
-
-            activeComponents.forEach(comp => {
-                gridB.appendChild(createCard(comp, 'B'));
-            });
-        }
-
-        function createCard(comp, team) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.dataset.id = comp.id;
-
-            // COMPATIBILIDADE PARA TV INTERATIVA (POINTER EVENTS)
-            card.onpointerdown = (e) => {
-                e.preventDefault();
-                handleTap(comp.id, team, card);
-            };
-
-            card.innerHTML = `
-                <div class="card-icon">${comp.icon}</div>
-                <div class="card-title">${comp.title}</div>
-            `;
-            return card;
-        }
-
-        function nextRound() {
-            if (currentRound >= rounds.length) {
-                endGame();
-                return;
+        // RENDERIZAR PERGUNTA DE UMA EQUIPE
+        function renderTeamQuestion(team) {
+            const state = (team === 'A') ? stateA : stateB;
+            
+            if (state.index >= state.questions.length) {
+                state.questions = shuffle(questionsDatabase);
+                state.index = 0;
             }
 
-            const target = rounds[currentRound];
-            document.getElementById('prompt-category').innerText = target.category;
-            document.getElementById('prompt-text').innerText = `"${target.desc}"`;
+            const currentQ = state.questions[state.index];
+            const suffix = team.toLowerCase();
+
+            document.getElementById(`q-number-${suffix}`).innerText = `Pergunta ${state.index + 1}`;
+            document.getElementById(`q-text-${suffix}`).innerText = currentQ.q;
+
+            const container = document.getElementById(`options-${suffix}`);
+            container.innerHTML = '';
+
+            const letters = ['A', 'B', 'C', 'D'];
+            currentQ.options.forEach((optText, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+
+                // MULTI-TOUCH OTIMIZADO PARA TV
+                btn.onpointerdown = (e) => {
+                    e.preventDefault();
+                    handleTeamAnswer(team, i, btn);
+                };
+
+                btn.innerHTML = `
+                    <div class="opt-letter">${letters[i]}</div>
+                    <div>${optText}</div>
+                `;
+                container.appendChild(btn);
+            });
         }
 
-        function handleTap(selectedId, team, cardElement) {
-            if ((team === 'A' && isLockedA) || (team === 'B' && isLockedB)) return;
+        // PROCESSAR RESPOSTA INDEPENDENTE
+        function handleTeamAnswer(team, selectedIndex, btnElement) {
+            const state = (team === 'A') ? stateA : stateB;
 
-            const target = rounds[currentRound];
+            if (state.isBlocked) return;
+            state.isBlocked = true;
 
-            if (selectedId === target.id) {
+            const currentQ = state.questions[state.index];
+
+            if (selectedIndex === currentQ.correct) {
                 playSound('correct');
-                if (team === 'A') {
-                    scoreA += 10;
-                } else {
-                    scoreB += 10;
-                }
+                btnElement.classList.add('opt-correct');
+                state.score++;
                 updateScores();
-                
-                currentRound++;
-                nextRound();
             } else {
                 playSound('wrong');
-                cardElement.classList.add('wrong-flash');
-                setTimeout(() => cardElement.classList.remove('wrong-flash'), 500);
-
-                if (team === 'A') {
-                    isLockedA = true;
-                    setTimeout(() => isLockedA = false, 1200);
-                } else {
-                    isLockedB = true;
-                    setTimeout(() => isLockedB = false, 1200);
-                }
+                btnElement.classList.add('opt-wrong');
             }
+
+            setTimeout(() => {
+                state.index++;
+                state.isBlocked = false;
+                renderTeamQuestion(team);
+            }, 350);
         }
 
         function updateScores() {
-            document.getElementById('score-a').innerText = scoreA;
-            document.getElementById('score-b').innerText = scoreB;
+            document.getElementById('score-a').innerText = stateA.score;
+            document.getElementById('score-b').innerText = stateB.score;
+        }
+
+        function updateTimerDisplay() {
+            const display = document.getElementById('timer-display');
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+            if (timerSeconds <= 30) {
+                display.classList.add('warning');
+            } else {
+                display.classList.remove('warning');
+            }
         }
 
         function endGame() {
-            playSound('win');
-            const modal = document.getElementById('modal-winner');
-            const title = document.getElementById('winner-title');
-            const desc = document.getElementById('winner-desc');
+            clearInterval(timerInterval);
 
-            if (scoreA > scoreB) {
+            const title = document.getElementById('final-title');
+            const desc = document.getElementById('final-desc');
+
+            if (stateA.score > stateB.score) {
                 title.innerText = '🟦 VITÓRIA DA EQUIPE AZUL!';
                 title.style.color = '#38bdf8';
-                desc.innerText = `Placar final: ${scoreA} x ${scoreB} pontos. Dominaram o sistema!`;
-            } else if (scoreB > scoreA) {
+                desc.innerHTML = `
+                    A Equipe Azul venceu pelo placar de <strong>${stateA.score} x ${stateB.score}</strong> acertos!
+                `;
+            } else if (stateB.score > stateA.score) {
                 title.innerText = '🟥 VITÓRIA DA EQUIPE VERMELHA!';
                 title.style.color = '#fb7185';
-                desc.innerText = `Placar final: ${scoreB} x ${scoreA} pontos. Dominaram o sistema!`;
+                desc.innerHTML = `
+                    A Equipe Vermelha venceu pelo placar de <strong>${stateB.score} x ${stateA.score}</strong> acertos!
+                `;
             } else {
-                title.innerText = '🤝 EMPATE TÉCNICO!';
+                title.innerText = '🤝 EMPATE IMPRESSIONANTE!';
                 title.style.color = '#facc15';
-                desc.innerText = `Ambas as equipes fizeram ${scoreA} pontos! Excelente desempenho!`;
+                desc.innerHTML = `
+                    As duas equipes empataram com incríveis <strong>${stateA.score} acertos</strong> cada!
+                `;
             }
 
-            modal.classList.remove('hidden');
+            document.getElementById('screen-final').classList.remove('hidden');
         }
 
-        // BINDING DOS BOTÕES COM POINTER EVENTS
-        document.getElementById('btn-reset').onpointerdown = (e) => {
+        // BINDING DOS BOTÕES COM POINTERDOWN
+        document.getElementById('btn-start-game').onpointerdown = (e) => {
             e.preventDefault();
-            initGame();
+            startGame();
         };
 
         document.getElementById('btn-restart').onpointerdown = (e) => {
             e.preventDefault();
-            initGame();
+            startGame();
         };
-
-        window.onload = initGame;
     </script>
 </body>
 </html>
