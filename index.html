@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Batalha Simultânea de Informática</title>
+    <title>Batalha Simultânea de Números Contíguos</title>
     <style>
         * {
             box-sizing: border-box;
@@ -11,13 +11,25 @@
             padding: 0;
             user-select: none;
             -webkit-user-select: none;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
 
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --blue-team: #0ea5e9;
+            --blue-glow: rgba(14, 165, 233, 0.4);
+            --green-team: #22c55e;
+            --green-glow: rgba(34, 197, 94, 0.4);
+            --gold-accent: #facc15;
+            --danger-red: #ef4444;
+        }
+
         body {
-            background-color: #0f172a;
+            background-color: var(--bg-dark);
             color: #f8fafc;
             height: 100vh;
             display: flex;
@@ -28,32 +40,32 @@
         /* CABEÇALHO COMPARTILHADO */
         header {
             background: #1e293b;
-            padding: 10px 20px;
+            padding: 8px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid #334155;
+            border-bottom: 4px solid var(--border-color);
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 10;
-            height: 80px;
+            height: 75px;
+            flex-shrink: 0;
         }
 
         .score-box {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 8px 20px;
+            gap: 12px;
+            padding: 6px 16px;
             border-radius: 12px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 800;
         }
 
-        /* AZUL E VERDE */
-        .score-a { background-color: rgba(14, 165, 233, 0.2); border: 2px solid #0ea5e9; color: #38bdf8; }
-        .score-b { background-color: rgba(34, 197, 94, 0.2); border: 2px solid #22c55e; color: #4ade80; }
+        .score-a { background-color: rgba(14, 165, 233, 0.15); border: 2px solid var(--blue-team); color: #38bdf8; }
+        .score-b { background-color: rgba(34, 197, 94, 0.15); border: 2px solid var(--green-team); color: #4ade80; }
 
         .score-val {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
         }
 
@@ -66,13 +78,14 @@
         .timer-box {
             background-color: #0284c7;
             color: #ffffff;
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 900;
-            padding: 4px 25px;
-            border-radius: 12px;
+            padding: 2px 20px;
+            border-radius: 10px;
             border: 2px solid #38bdf8;
-            min-width: 140px;
+            min-width: 120px;
             text-align: center;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
         }
 
         .timer-box.warning {
@@ -90,14 +103,15 @@
         main {
             display: flex;
             flex-grow: 1;
-            height: calc(100vh - 80px);
+            height: calc(100vh - 75px);
             position: relative;
+            overflow: hidden;
         }
 
         .divider {
             width: 6px;
-            background: linear-gradient(to bottom, #0ea5e9, #22c55e);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            background: linear-gradient(to bottom, var(--blue-team), var(--green-team));
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
             z-index: 5;
         }
 
@@ -105,108 +119,185 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 15px;
-            gap: 12px;
-            overflow-y: auto;
+            padding: 10px 14px;
+            gap: 10px;
+            height: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .side-a { background-color: #082f49; }
         .side-b { background-color: #052e16; }
 
-        .team-title {
-            text-align: center;
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            opacity: 0.9;
-            padding: 4px;
-            border-radius: 8px;
-        }
-
-        .side-a .team-title { background-color: rgba(14, 165, 233, 0.3); color: #7dd3fc; }
-        .side-b .team-title { background-color: rgba(34, 197, 94, 0.3); color: #86efac; }
-
-        /* CARDS E BOTÕES */
-        .question-card {
-            background: #1e293b;
-            border: 2px solid #475569;
-            border-radius: 14px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            min-height: 110px;
+        .team-header {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .q-number {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .q-text {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #f8fafc;
-            line-height: 1.3;
-        }
-
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            flex-grow: 1;
-            justify-content: center;
-        }
-
-        .option-btn {
-            background: #1e293b;
-            border: 2px solid #475569;
-            border-radius: 12px;
-            padding: 12px 15px;
-            color: #f1f5f9;
-            font-size: 1rem;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
-            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            min-height: 60px;
-        }
-
-        .opt-letter {
-            background: #334155;
-            color: #facc15;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            font-weight: 900;
+            gap: 8px;
             flex-shrink: 0;
         }
 
-        /* ANIMAÇÕES DE ACERTO/ERRO */
-        .opt-correct {
-            background: #15803d !important;
-            border-color: #22c55e !important;
-            color: #ffffff !important;
+        .team-title {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            flex-grow: 1;
         }
 
-        .opt-wrong {
-            background: #b91c1c !important;
-            border-color: #ef4444 !important;
-            color: #ffffff !important;
+        .side-a .team-title { background-color: rgba(14, 165, 233, 0.3); color: #7dd3fc; border: 1px solid var(--blue-team); }
+        .side-b .team-title { background-color: rgba(34, 197, 94, 0.3); color: #86efac; border: 1px solid var(--green-team); }
+
+        /* PAINEL DE META DA SOMA */
+        .sum-status-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            flex-shrink: 0;
         }
 
-        /* TELA DE OVERLAY DE INÍCIO / FIM */
+        .target-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .badge-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .target-val {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--gold-accent);
+        }
+
+        .current-val {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #ffffff;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .current-val.overflow {
+            color: var(--danger-red);
+            transform: scale(1.15);
+        }
+
+        .current-val.match {
+            color: #4ade80;
+            transform: scale(1.15);
+        }
+
+        .btn-clear {
+            background: #334155;
+            color: #f1f5f9;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-clear:active {
+            transform: scale(0.95);
+            background: #475569;
+        }
+
+        /* CONTAINER DO TABULEIRO */
+        .grid-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            min-height: 0; /* Previne estourar flexbox */
+            position: relative;
+        }
+
+        .board-grid {
+            display: grid;
+            gap: 2px;
+            width: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            aspect-ratio: 1 / 1;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 4px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
+            touch-action: none;
+        }
+
+        /* CÉLULAS DO TABULEIRO */
+        .cell {
+            background: #1e293b;
+            color: #f8fafc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: clamp(0.6rem, 1.8vw, 1.3rem);
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .side-a .cell:hover { background: #334155; }
+        .side-b .cell:hover { background: #164e63; }
+
+        .cell.selected {
+            background: #0ea5e9 !important;
+            color: #ffffff;
+            transform: scale(0.94);
+            box-shadow: 0 0 10px var(--blue-team);
+            z-index: 2;
+        }
+
+        .side-b .cell.selected {
+            background: #22c55e !important;
+            box-shadow: 0 0 10px var(--green-team);
+        }
+
+        .cell.correct-flash {
+            background: #16a34a !important;
+            color: #ffffff !important;
+            animation: flashGreen 0.4s ease-out;
+        }
+
+        .cell.wrong-flash {
+            background: #dc2626 !important;
+            color: #ffffff !important;
+            animation: flashRed 0.4s ease-out;
+        }
+
+        @keyframes flashGreen {
+            0% { transform: scale(1.1); background: #22c55e; }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes flashRed {
+            0% { transform: scale(1.1); background: #ef4444; }
+            100% { transform: scale(1); }
+        }
+
+        /* TELA DE OVERLAY E CONFIGURAÇÕES */
         .overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -218,35 +309,134 @@
             z-index: 100;
             padding: 20px;
             text-align: center;
+            overflow-y: auto;
         }
 
         .hidden { display: none !important; }
 
+        .modal-card {
+            background: #1e293b;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px 30px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .modal-title {
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             font-weight: 900;
-            margin-bottom: 15px;
-            color: #facc15;
+            color: var(--gold-accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .modal-desc {
-            font-size: 1.4rem;
+            font-size: 1rem;
             color: #cbd5e1;
-            margin-bottom: 30px;
-            max-width: 700px;
-            line-height: 1.4;
+            line-height: 1.5;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            text-align: left;
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .config-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .config-group label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .config-group select, .config-group input {
+            background: #1e293b;
+            color: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .config-group select:focus, .config-group input:focus {
+            border-color: var(--blue-team);
         }
 
         .btn-start {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             color: white;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 800;
-            padding: 16px 45px;
+            padding: 14px 35px;
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.6);
+        }
+
+        .btn-start:active {
+            transform: translateY(0);
+        }
+
+        /* MODO SOLO */
+        body.solo-mode .side-b,
+        body.solo-mode .divider,
+        body.solo-mode .score-b {
+            display: none !important;
+        }
+
+        body.solo-mode .score-a {
+            margin: 0 auto;
+        }
+
+        /* AJUSTES RESPONSIVOS */
+        @media (max-width: 768px) {
+            header {
+                padding: 6px 10px;
+                height: 65px;
+            }
+            .score-box {
+                padding: 4px 10px;
+                font-size: 0.9rem;
+            }
+            .score-val {
+                font-size: 1.3rem;
+            }
+            .timer-box {
+                font-size: 1.5rem;
+                min-width: 90px;
+                padding: 2px 10px;
+            }
+            .modal-title {
+                font-size: 1.6rem;
+            }
+            .team-side {
+                padding: 6px;
+            }
         }
     </style>
 </head>
@@ -255,7 +445,7 @@
     <!-- CABEÇALHO COM PLACAR SIMULTÂNEO -->
     <header>
         <div class="score-box score-a">
-            <span>AZUL</span>
+            <span id="label-team-a">AZUL</span>
             <span class="score-val" id="score-a">0</span>
         </div>
 
@@ -265,251 +455,469 @@
 
         <div class="score-box score-b">
             <span class="score-val" id="score-b">0</span>
-            <span>VERDE</span>
+            <span id="label-team-b">VERDE</span>
         </div>
     </header>
 
     <!-- ARENA DE COMPETIÇÃO PARALELA -->
-    <main>
+    <main id="arena-main">
         <!-- LADO ESQUERDO: EQUIPE AZUL -->
         <section class="team-side side-a">
-            <div class="team-title">🟦 EQUIPE AZUL</div>
-            <div class="question-card">
-                <div class="q-number" id="q-number-a">Pergunta 1</div>
-                <div class="q-text" id="q-text-a">Aguardando início...</div>
+            <div class="team-header">
+                <div class="team-title" id="title-side-a">🟦 EQUIPE AZUL</div>
             </div>
-            <div class="options-grid" id="options-a"></div>
+
+            <div class="sum-status-card">
+                <div class="target-badge">
+                    <span class="badge-label">Soma Alvo</span>
+                    <span class="target-val" id="target-a">15</span>
+                </div>
+                <div class="target-badge">
+                    <span class="badge-label">Soma Atual</span>
+                    <span class="current-val" id="current-a">0</span>
+                </div>
+                <button class="btn-clear" id="btn-clear-a">Limpar</button>
+            </div>
+
+            <div class="grid-container">
+                <div class="board-grid" id="grid-a"></div>
+            </div>
         </section>
 
         <div class="divider"></div>
 
         <!-- LADO DIREITO: EQUIPE VERDE -->
         <section class="team-side side-b">
-            <div class="team-title">🟩 EQUIPE VERDE</div>
-            <div class="question-card">
-                <div class="q-number" id="q-number-b">Pergunta 1</div>
-                <div class="q-text" id="q-text-b">Aguardando início...</div>
+            <div class="team-header">
+                <div class="team-title" id="title-side-b">🟩 EQUIPE VERDE</div>
             </div>
-            <div class="options-grid" id="options-b"></div>
+
+            <div class="sum-status-card">
+                <div class="target-badge">
+                    <span class="badge-label">Soma Alvo</span>
+                    <span class="target-val" id="target-b">15</span>
+                </div>
+                <div class="target-badge">
+                    <span class="badge-label">Soma Atual</span>
+                    <span class="current-val" id="current-b">0</span>
+                </div>
+                <button class="btn-clear" id="btn-clear-b">Limpar</button>
+            </div>
+
+            <div class="grid-container">
+                <div class="board-grid" id="grid-b"></div>
+            </div>
         </section>
     </main>
 
-    <!-- TELA INICIAL -->
+    <!-- TELA INICIAL / CONFIGURAÇÃO -->
     <div class="overlay" id="screen-start">
-        <div class="modal-title">⚡ BATALHA SIMULTÂNEA DIGITAL</div>
-        <div class="modal-desc">
-            As duas equipes jogarão <strong>ao mesmo tempo</strong> na TV Interativa!<br><br>
-            Cada lado possui suas próprias perguntas. Vocês têm <strong>3 minutos (180 segundos)</strong> para responder o máximo de questões possíveis.<br><br>
-            <span style="color: #4ade80;">🎯 Cada acerto: <strong>+2 pontos</strong></span> | <span style="color: #f87171;">❌ Cada erro: <strong>-1 ponto</strong></span>
+        <div class="modal-card">
+            <div class="modal-title">🔢 BATALHA DE SOMA CONTÍGUA</div>
+            <div class="modal-desc">
+                Conecte <strong>2 ou mais números adjacentes</strong> (horizontal, vertical ou diagonal) cuja soma seja igual ao número alvo!
+            </div>
+
+            <div class="config-grid">
+                <div class="config-group">
+                    <label for="cfg-mode">Modo de Jogo</label>
+                    <select id="cfg-mode">
+                        <option value="battle" selected>Batalha 2 Equipes (Azul vs Verde)</option>
+                        <option value="solo">Modo Solo / Treino</option>
+                    </select>
+                </div>
+
+                <div class="config-group">
+                    <label for="cfg-target">Soma Alvo Inicial</label>
+                    <input type="number" id="cfg-target" value="15" min="5" max="100">
+                </div>
+
+                <div class="config-group">
+                    <label for="cfg-grid-size">Tamanho do Tabuleiro</label>
+                    <select id="cfg-grid-size">
+                        <option value="8">8 x 8 (Rápido)</option>
+                        <option value="10" selected>10 x 10 (Recomendado)</option>
+                        <option value="12">12 x 12 (Médio)</option>
+                        <option value="15">15 x 15 (Grande)</option>
+                        <option value="20">20 x 20 (Desafio Máximo)</option>
+                    </select>
+                </div>
+
+                <div class="config-group">
+                    <label for="cfg-num-range">Intervalo de Números</label>
+                    <select id="cfg-num-range">
+                        <option value="9">1 a 9</option>
+                        <option value="15" selected>1 a 15</option>
+                        <option value="20">1 a 20</option>
+                    </select>
+                </div>
+
+                <div class="config-group">
+                    <label for="cfg-timer">Tempo de Partida</label>
+                    <select id="cfg-timer">
+                        <option value="60">1 Minuto</option>
+                        <option value="180" selected>3 Minutos</option>
+                        <option value="300">5 Minutos</option>
+                        <option value="0">Sem Tempo (Livre)</option>
+                    </select>
+                </div>
+
+                <div class="config-group">
+                    <label for="cfg-target-type">Regra da Soma Alvo</label>
+                    <select id="cfg-target-type">
+                        <option value="fixed" selected>Fixa (Mesmo alvo até o fim)</option>
+                        <option value="dynamic">Dinâmica (Muda a cada acerto)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-start" id="btn-start-game">INICIAR PARTIDA 🚀</button>
         </div>
-        <button class="btn-start" id="btn-start-game">INICIAR PARTIDA 🚀</button>
     </div>
 
     <!-- TELA FINAL -->
     <div class="overlay hidden" id="screen-final">
-        <div class="modal-title" id="final-title">FIM DE JOGO!</div>
-        <div class="modal-desc" id="final-desc">Calculando pontuação...</div>
-        <button class="btn-start" id="btn-restart">JOGAR NOVAMENTE 🔄</button>
+        <div class="modal-card">
+            <div class="modal-title" id="final-title">FIM DE JOGO!</div>
+            <div class="modal-desc" id="final-desc">Calculando resultados...</div>
+            <button class="btn-start" id="btn-restart">JOGAR NOVAMENTE 🔄</button>
+        </div>
     </div>
 
     <script>
-        // BANCO DE PERGUNTAS
-        const questionsDatabase = [
-            { q: "Qual é a função principal de um Sistema Operacional?", options: ["Gerenciar o hardware e rodar programas", "Editar fotos e criar vídeos", "Navegar na internet sem rede", "Proteger o monitor contra poeira"], correct: 0 },
-            { q: "O que é a Área de Trabalho (Desktop)?", options: ["Uma pasta de vírus oculta", "A tela inicial após a inicialização", "O aplicativo de digitar texto", "O gabinete físico do PC"], correct: 1 },
-            { q: "Qual elemento exibe os programas abertos e o relógio?", options: ["Painel de Controle", "Barra de Tarefas", "Bloco de Notas", "Lixeira"], correct: 1 },
-            { q: "O que é um 'Atalho' no Sistema Operacional?", options: ["Um programa de limpeza", "Um arquivo corrompido", "Um ícone com seta para acesso rápido", "Uma tecla que desliga a TV"], correct: 2 },
-            { q: "Para que servem os Diretórios (Pastas)?", options: ["Para armazenar energia", "Para organizar e agrupar arquivos", "Para acelerar o Wi-Fi", "Para criar gráficos automáticos"], correct: 1 },
-            { q: "O que acontece ao 'Compactar' um arquivo (ZIP/RAR)?", options: ["O arquivo é excluído", "Sua cor é alterada", "O tamanho é reduzido para economizar espaço", "Ele vira uma imagem JPEG"], correct: 2 },
-            { q: "O que é considerado um 'Acessório' do sistema?", options: ["O teclado e o mouse", "A Calculadora ou Bloco de Notas", "O monitor de tela curva", "A placa de vídeo"], correct: 1 },
-            { q: "Para que serve a ferramenta 'Limpeza de Disco'?", options: ["Limpar a tela física", "Remover arquivos temporários inutilizados", "Formatar o computador", "Organizar os ícones da tela"], correct: 1 },
-            { q: "O que significa 'Letramento Digital'?", options: ["Digitar rápido sem olhar", "Usar a tecnologia com autonomia e ética", "Ter mais de dois computadores", "Saber consertar eletrônicos"], correct: 1 },
-            { q: "Para onde vão os arquivos excluídos do computador?", options: ["Menu Iniciar", "Lixeira", "Downloads", "Nuvem"], correct: 1 },
-            { q: "Qual recurso ajusta o início de um parágrafo?", options: ["Recuo de Parágrafo", "Quebra de Página", "Marcadores", "Sombreamento"], correct: 0 },
-            { q: "O que faz a 'Quebra de Página'?", options: ["Apaga a página atual", "Envia o texto seguinte para a próxima página", "Divide a folha ao meio", "Imprime o documento"], correct: 1 },
-            { q: "O que indica uma linha ondulada vermelha sob uma palavra?", options: ["Um link de site", "Texto em negrito", "Um possível erro ortográfico", "Um comando salvo"], correct: 2 },
-            { q: "Para que servem os 'Marcadores e Numeração'?", options: ["Criar listas organizadas em tópicos ou números", "Contar as páginas do texto", "Mudar a cor de fundo", "Inserir bordas na folha"], correct: 0 },
-            { q: "Como dividimos o texto de uma folha em faixas verticais?", options: ["Tabelas", "Formatação em Colunas", "Layout Horizontal", "Espaçamento Duplo"], correct: 1 },
-            { q: "Qual a diferença entre 'Salvar' e 'Salvar Como'?", options: ["Não há diferença", "'Salvar Como' permite alterar o nome ou local", "'Salvar' apaga o arquivo antigo", "'Salvar Como' envia e-mail"], correct: 1 },
-            { q: "O que é a orientação de página no modo 'Paisagem'?", options: ["A folha na vertical (em pé)", "A folha na horizontal (deitada)", "A folha dividida em 4 partes", "Um slide de apresentação"], correct: 1 },
-            { q: "Qual é o atalho de teclado para Copiar um texto?", options: ["Ctrl + V", "Ctrl + X", "Ctrl + C", "Ctrl + Z"], correct: 2 },
-            { q: "O que faz o 'Alinhamento Justificado'?", options: ["Alinha o texto à esquerda", "Centraliza o texto na folha", "Distribui o texto entre as duas margens", "Aumenta o tamanho da letra"], correct: 2 },
-            { q: "Para que serve a 'Barra de Ferramentas / Faixa de Opções'?", options: ["Agrupar os botões de comandos e formatação", "Exibir os e-mails recebidos", "Mostrar a bateria do notebook", "Conectar ao Wi-Fi"], correct: 0 },
-            { q: "Qual é a principal força motriz que caracterizou a transição da Primeira para a Segunda Revolução Industrial?", options: ["A introdução da eletricidade e da produção em massa.", "A integração de sistemas ciber-físicos em redes conectadas.", "A automação de processos via computadores e controladores lógicos.", "O surgimento da tração a vapor e do tear mecânico."], correct: 0 },
-            { q: "Em um contexto de recebimento de cargas no almoxarifado, qual tecnologia habilitadora possibilita a identificação automática de itens sem a necessidade de visada direta?", options: ["Aferição volumétrica a laser.", "Sistemas de visão computacional fixa.", "Código de barras bidimensional (QR Code).", "Identificação por radiofrequência (RFID)."], correct: 3 },
-            { q: "Como a arquitetura de Internet das Coisas (IoT) atua para mitigar gargalos operacionais no recebimento de materiais de uma fábrica?", options: ["Substituindo o uso de galpões físicos por depósitos virtuais.", "Capturando dados de entrada automaticamente e enviando-os ao sistema.", "Permitindo a leitura manual mais rápida por parte dos operadores.", "Eliminando a necessidade de relatórios de conferência de estoque."], correct: 1 },
-            { q: "Qual modelo de serviço em nuvem é indicado quando uma indústria precisa utilizar um sistema WMS pronto, acessado via web sem gerenciar a infraestrutura?", options: ["On-Premise dedicado.", "PaaS (Platform as a Service).", "SaaS (Software as a Service).", "IaaS (Infrastructure as a Service)."], correct: 2 },
-            { q: "Um sistema corporativo que utiliza dados hospedados em nuvem privada combinados com dados de parceiros em nuvem pública adota qual arquitetura de implantação?", options: ["Nuvem Privada Exclusiva.", "Nuvem Híbrida.", "Nuvem Comunitária.", "Nuvem Multiusuário Local."], correct: 1 },
-            { q: "No conceito dos 5 Vs do Big Data, a dimensão que trata do alinhamento e da precisão técnica das informações coletadas é chamada de:", options: ["Velocidade.", "Variedade.", "Veracidade.", "Valor."], correct: 2 },
-            { q: "Como o uso do Big Data Analytics e da Inteligência Artificial otimiza o planejamento e reposição de estoques na gestão logística?", options: ["Identificando padrões e realizando previsão preditiva de demanda.", "Aumentando o limite físico de armazenamento dos galpões.", "Substituindo completamente o transporte físico de cargas.", "Eliminando a necessidade de emissão de notas fiscais."], correct: 0 },
-            { q: "Qual das seguintes alternativas descreve uma característica distintiva dos Robôs Móveis Autônomos (AMRs) em relação aos veículos guiados automatizados (AGVs) convencionais?", options: ["Necessidade de trilhos magnéticos fixos no piso.", "Navegação dinâmica com desvio autônomo de obstáculos sem rotas fixas.", "Operação exclusivamente manual controlada por um operador.", "Incapacidade de se conectar a redes sem fio ou sensores."], correct: 1 },
-            { q: "A Manufatura Aditiva (impressão 3D) traz qual benefício direto para a gestão de reposição de peças sobressalentes na logística?", options: ["Eliminação de qualquer tipo de material plástico ou metálico.", "Necessidade de transporte marítimo internacional obrigatório.", "Possibilidade de produzir peças sob demanda reduzindo o estoque de segurança.", "Aumento do tempo de espera do cliente final."], correct: 2 },
-            { q: "Qual é o principal objetivo do conceito de Gêmeo Digital (Digital Twin) aplicado a um Centro de Distribuição?", options: ["Criar uma réplica virtual para simular e otimizar processos antes de alterações físicas.", "Substituir fisicamente os funcionários do setor de picking.", "Reduzir a velocidade das esteiras transportadoras.", "Eliminar a necessidade de conexão com a internet."], correct: 0 },
-            { q: "A integração horizontal de sistemas em uma cadeia de suprimentos conectada caracteriza-se por:", options: ["Conexão e compartilhamento de informações entre fornecedores, fábrica e cliente final.", "Comunicação exclusiva entre o sensor do chão de fábrica e o controlador do robô.", "Isolamento de dados dentro de um único departamento da empresa.", "Substituição completa do sistema ERP por planilhas manuais."], correct: 0 },
-            { q: "Qual pilar da Segurança Digital garante que a informação esteja acessível para usuários autorizados sempre que for requerida?", options: ["Confidencialidade.", "Integridade.", "Disponibilidade.", "Não repúdio."], correct: 2 },
-            { q: "A garantia de que o autor de uma transação digital não possa negar ter realizado essa operação refere-se a qual requisito de segurança?", options: ["Não repúdio.", "Privacidade.", "Legalidade.", "Anulabilidade."], correct: 0 },
-            { q: "Na operação logística de separação de pedidos (picking), a Realidade Aumentada (RA) diferencia-se da Realidade Virtual (RV) porque a RA:", options: ["Cria um ambiente 100% digital e isola o usuário do mundo real.", "Sobrepõe elementos gráficos e instruções digitais diretamente na visão do mundo real.", "Elimina a necessidade de qualquer dispositivo tecnológico.", "Substitui os sistemas WMS e ERP por comandos manuais."], correct: 1 },
-            { q: "A aplicação da tecnologia de Pick-by-Vision no setor de separação de mercadorias utiliza de forma proeminente qual destas soluções?", options: ["Óculos inteligentes que projetam localização e quantidade a ser coletada.", "Leitores fixos de código de barras em mesas de escritório.", "Impressoras 3D industriais de grande porte.", "Servidores locais isolados sem conexão à internet."], correct: 0 },
-            { q: "Qual das alternativas representa uma integração vertical completa do chão de fábrica até a alta gestão na Indústria 4.0?", options: ["Sensores nos equipamentos enviando métricas ao MES e sincronizando com o ERP.", "Uso de papéis para anotação diária de produção enviada semanalmente por e-mail.", "Isolamento total dos dados de produção em relação ao sistema financeiro.", "Envio de relatórios físicos de estoque diretamente aos fornecedores."], correct: 0 },
-            { q: "Para garantir a conformidade com a legislação de proteção de dados (como a LGPD) na movimentação e separação de pedidos, a empresa deve:", options: ["Compartilhar livremente dados de clientes com qualquer parceiro não autorizado.", "Restringir o acesso a dados pessoais e adotar protocolos fortes de anonimização e segurança.", "Armazenar senhas e documentos em papéis visíveis no setor de expedição.", "Ignorar auditorias de segurança cibernética."], correct: 1 },
-            { q: "A Mineração de Dados (Data Mining) dentro de uma base de gestão logística atua para:", options: ["Descobrir padrões ocultos, correlações e anomalias em grandes conjuntos de dados.", "Destruir dados antigos sem necessidade de backup.", "Aumentar manualmente o tempo de digitação de notas fiscais.", "Reduzir a velocidade de transmissão de redes sem fio."], correct: 0 },
-            { q: "Ao planejar a implementação de robótica avançada no recebimento de um armazém, o fator prioritário de segurança no trabalho é:", options: ["Desativar os sensores de proximidade dos robôs para aumentar a velocidade.", "Equipar os sistemas autônomos com sensores de presença e parada de emergência integrados.", "Permitir a circulação de pedestres em rotas de alta velocidade sem sinalização.", "Remover proteções físicas de partes móveis dos robôs."], correct: 1 },
-            { q: "A convergência entre IoT, Computação em Nuvem, Big Data, Robótica e Realidade Aumentada na logística visa principalmente:", options: ["Aumentar a visibilidade da operação, flexibilidade e eficiência em tempo real na cadeia logística.", "Aumentar os custos operacionais e desacelerar a entrega de mercadorias.", "Eliminar o uso de qualquer tipo de software de gestão empresarial.", "Isolar as indústrias dos seus fornecedores e clientes."], correct: 0 },
-            { q: "Qual é a definição legal de acidente de trabalho segundo a legislação previdenciária brasileira?", options: ["Aquele que ocorre pelo exercício do trabalho a serviço da empresa, provocando lesão corporal ou perturbação funcional.", "Qualquer imprevisto que ocorra no trajeto de ida ou volta do trabalho usando transporte público.", "Um evento indesejado que causa apenas danos materiais aos equipamentos da empresa.", "Qualquer doença crônica adquirida pelo trabalhador ao longo de sua vida adulta."], correct: 0 },
-            { q: "Os ruídos intensos, vibrações, temperaturas extremas (frio/calor) e radiações são classificados como agentes de risco:", options: ["Químicos.", "Biológicos.", "Físicos.", "Ergonômicos."], correct: 2 },
-            { q: "Poeiras, fumos, névoas, gases e vapores que podem penetrar no organismo pela via respiratória são exemplos de agentes:", options: ["Físicos.", "Químicos.", "Biológicos.", "Mecânicos."], correct: 1 },
-            { q: "Qual das alternativas apresenta um exemplo de Equipamento de Proteção Coletiva (EPC)?", options: ["Óculos de proteção contra respingos.", "Exaustor de ar em ambiente fechado.", "Protetor auricular do tipo plug.", "Luvas de vaqueta para manuseio de cargas."], correct: 1 },
-            { q: "A principal função do Mapa de Riscos em uma empresa ou ambiente logístico é:", options: ["Listar os salários e cargos de todos os funcionários da empresa.", "Representar graficamente os locais de trabalho e os riscos presentes de forma visível aos trabalhadores.", "Registrar as horas extras efetuadas pelos funcionários do almoxarifado.", "Substituir a necessidade de uso de Equipamentos de Proteção Individual (EPI)."], correct: 1 },
-            { q: "O programa focado na antecipação, reconhecimento, avaliação e controle dos riscos ambientais no trabalho é o:", options: ["PPCI (Plano de Prevenção Contra Incêndios).", "PPRA (Programa de Prevenção de Riscos Ambientais).", "5S (Programa de Qualidade).", "CLT (Consolidação das Leis do Trabalho)."], correct: 1 },
-            { q: "Em uma sinalização de segurança, as cores e símbolos nos ambientes industriais têm como objetivo primário:", options: ["Aumentar a iluminação estética do galpão de armazenamento.", "Alertar, alertar sobre perigos e indicar rotas de fuga e equipamentos de emergência.", "Apenas orientar visitantes externos que não conhecem a empresa.", "Decorar os corredores de circulação do setor de expedicão."], correct: 1 },
-            { q: "Qual documento tem por finalidade estabelecer a rotina de segurança e o plano de ação no combate a emergências de fogo em uma edificação?", options: ["PPCI (Plano de Prevenção e Combate a Incêndio).", "Prontuário Médico de Saúde Ocupacional.", "Contrato Individual de Trabalho.", "Mapa de Cotação de Preços."], correct: 0 },
-            { q: "Bactérias, vírus, fungos e parasitas presentes em determinadas atividades profissionais constituem os riscos:", options: ["Físicos.", "Ergonômicos.", "Biológicos.", "Operacionais."], correct: 2 },
-            { q: "A utilização prioritária de Equipamentos de Proteção Coletiva (EPC) em relação aos Equipamentos de Proteção Individual (EPI) justifica-se porque o EPC:", options: ["É sempre mais barato para o empregador adquirir.", "Protege o ambiente e a coletividade de trabalhadores simultaneamente na fonte de risco.", "Elimina a obrigação de treinamentos de segurança.", "É de uso individualizado para cada funcionário do turno."], correct: 1 },
-            { q: "Um trabalhador que realiza levantamento e transporte manual de peso de forma inadequada está sujeito prioritariamente a riscos de natureza:", options: ["Química.", "Ergonômica.", "Biológica.", "Radioativa."], correct: 1 },
-            { q: "A Consolidação das Leis do Trabalho (CLT) garante ao trabalhador contratado em regime formal:", options: ["Jornada de trabalho limitada, repouso semanal remunerado e férias garantidas por lei.", "Isenção total do uso de EPIs em ambientes perigosos.", "A obrigação de cumprir horas extras sem remuneração adicional.", "Trabalho sem limite de horas diárias no setor logístico."], correct: 0 },
-            { q: "O comportamento seguro no ambiente de trabalho envolve prioritariamente:", options: ["Focar apenas na produtividade sem atenção às normas internas.", "Adotar atitudes conscientes e cumprir procedimentos técnicos e normas de segurança.", "Delegar a responsabilidade pela própria segurança apenas ao técnico de SST.", "Usar os EPIs apenas quando a fiscalização estiver presente."], correct: 1 },
-            { q: "Qual a importância do descarte correto e da reciclagem de resíduos industriais na gestão logística ambiental?", options: ["Evitar a contaminação ambiental e cumprir o uso racional de recursos.", "Aumentar a geração de lixo no almoxarifado.", "Substituir os treinamentos de prevenção de acidentes.", "Reduzir o espaço físico necessário para a armazenagem."], correct: 0 },
-            { q: "Ao atuar na movimentação e armazenagem de produtos perigosos, o operador deve verificar prioritariamente:", options: ["A cor da embalagem sem ler as etiquetas de sinalização.", "A FISPQ (Ficha de Informação de Segurança de Produtos Químicos) e a sinalização de risco específica.", "Apenas o peso bruto da carga.", "Se o produto pode ser transportado sem o uso de luvas ou óculos."], correct: 1 },
-            { q: "Inspeções periódicas de segurança nas áreas operacionais e de armazenagem servem para:", options: ["Identificar antecipadamente condições inseguras ou desvios antes que ocorram acidentes.", "Punir financeiramente os funcionários com mais tempo de casa.", "Aumentar o tempo de movimentação de cargas na expedição.", "Gerar relatórios de estoque para o setor de compras."], correct: 0 },
-            { q: "Qual das alternativas representa um exemplo de energia renovável aplicada ao uso racional de recursos em galpões logísticos?", options: ["Uso contínuo de geradores a óleo diesel sem filtros.", "Instalação de sistemas de iluminação e geração por energia solar fotovoltaica.", "Descarte de lâmpadas fluorescentes no lixo comum.", "Manutenção de lâmpadas incandescentes acesas 24 horas por dia."], correct: 1 },
-            { q: "A obrigatoriedade do fornecimento gratuito de Equipamento de Proteção Individual (EPI) adequado ao risco é de responsabilidade do:", options: ["Próprio trabalhador.", "Sindicato da categoria.", "Empregador.", "Fabricante do maquinário."], correct: 2 },
-            { q: "O que caracteriza o 'acidente de trajeto' no contexto da segurança do trabalho?", options: ["Aquele sofrido pelo empregado no percurso da sua residência para o local de trabalho ou vice-versa.", "O acidente sofrido exclusivamente dentro da empresa durante o horário de almoço.", "Uma colisão de veículos envolvendo terceiros fora da rota habitual.", "Qualquer mal-estar sofrido durante as férias regulamentares."], correct: 0 },
-            { q: "A promoção de hábitos saudáveis, gestão do estresse e vacinação no ambiente ocupacional visam promover:", options: ["Apenas a redução do custo com vale-transporte.", "A qualidade de vida no trabalho e a saúde integral do trabalhador.", "O aumento obrigatório da jornada de trabalho semanal.", "A substituição dos Equipamentos de Proteção Coletiva."], correct: 1 }
-        ];
+        // ESTADO GLOBAL DA CONFIGURAÇÃO
+        let config = {
+            mode: 'battle',
+            targetSum: 15,
+            gridSize: 10,
+            maxNum: 15,
+            timerDuration: 180,
+            targetType: 'fixed'
+        };
 
-        // ESTADO INDEPENDENTE DAS EQUIPES
-        let stateA = { score: 0, index: 0, questions: [], isBlocked: false };
-        let stateB = { score: 0, index: 0, questions: [], isBlocked: false };
+        // ESTADO DAS EQUIPES
+        function createInitialTeamState() {
+            return {
+                score: 0,
+                target: config.targetSum,
+                gridData: [], // Matriz [row][col] = { val, element }
+                selectedPath: [], // Array de { row, col }
+                isBlocked: false
+            };
+        }
+
+        let stateA = {};
+        let stateB = {};
 
         let timerSeconds = 180;
         let timerInterval = null;
 
-        // EFEITOS SONOROS (WEB AUDIO API)
+        // EFEITOS SONOROS COM WEB AUDIO API
         let audioCtx = null;
         function playSound(type) {
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 if (audioCtx.state === 'suspended') audioCtx.resume();
-                
+
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
 
-                if (type === 'correct') {
+                const now = audioCtx.currentTime;
+
+                if (type === 'select') {
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.2);
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.05);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
                 } else if (type === 'wrong') {
                     osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(120, audioCtx.currentTime + 0.1);
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.2);
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.linearRampToValueAtTime(110, now + 0.2);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
                 }
             } catch (e) {}
         }
 
-        function shuffle(array) {
-            return [...array].sort(() => Math.random() - 0.5);
+        // GERAR NÚMERO ALEATÓRIO COERENTE COM O ALVO
+        function getRandomNumber() {
+            // Gera mais números menores para facilitar somas contíguas
+            const rand = Math.random();
+            if (rand < 0.6) {
+                return Math.floor(Math.random() * Math.min(8, config.targetSum - 1)) + 1;
+            } else {
+                return Math.floor(Math.random() * config.maxNum) + 1;
+            }
         }
 
-        // INICIAR O JOGO SIMULTÂNEO
+        // INICIALIZAR A PARTIDA
         function startGame() {
-            stateA = { score: 0, index: 0, questions: shuffle(questionsDatabase), isBlocked: false };
-            stateB = { score: 0, index: 0, questions: shuffle(questionsDatabase), isBlocked: false };
+            // Ler configurações
+            config.mode = document.getElementById('cfg-mode').value;
+            config.targetSum = parseInt(document.getElementById('cfg-target').value) || 15;
+            config.gridSize = parseInt(document.getElementById('cfg-grid-size').value) || 10;
+            config.maxNum = parseInt(document.getElementById('cfg-num-range').value) || 15;
+            config.timerDuration = parseInt(document.getElementById('cfg-timer').value);
+            config.targetType = document.getElementById('cfg-target-type').value;
 
-            timerSeconds = 180;
+            // Ajustar visual do body
+            if (config.mode === 'solo') {
+                document.body.classList.add('solo-mode');
+                document.getElementById('title-side-a').innerText = '👤 MODO SOLO';
+                document.getElementById('label-team-a').innerText = 'PONTOS';
+            } else {
+                document.body.classList.remove('solo-mode');
+                document.getElementById('title-side-a').innerText = '🟦 EQUIPE AZUL';
+                document.getElementById('title-side-b').innerText = '🟩 EQUIPE VERDE';
+                document.getElementById('label-team-a').innerText = 'AZUL';
+                document.getElementById('label-team-b').innerText = 'VERDE';
+            }
+
+            // Inicializar estados
+            stateA = createInitialTeamState();
+            stateB = createInitialTeamState();
+
             updateScores();
-            updateTimerDisplay();
+            updateTargetDisplay('A');
+            updateTargetDisplay('B');
+            updateCurrentSum('A');
+            updateCurrentSum('B');
 
+            // Gerar tabuleiros
+            buildGrid('A');
+            if (config.mode === 'battle') {
+                buildGrid('B');
+            }
+
+            // Ocultar overlays
             document.getElementById('screen-start').classList.add('hidden');
             document.getElementById('screen-final').classList.add('hidden');
 
-            renderTeamQuestion('A');
-            renderTeamQuestion('B');
-
+            // Configurar Timer
             clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timerSeconds--;
-                updateTimerDisplay();
+            timerSeconds = config.timerDuration;
+            updateTimerDisplay();
 
-                if (timerSeconds <= 0) {
-                    endGame();
-                }
-            }, 1000);
-        }
-
-        // RENDERIZAR PERGUNTA DE UMA EQUIPE
-        function renderTeamQuestion(team) {
-            const state = (team === 'A') ? stateA : stateB;
-            
-            if (state.index >= state.questions.length) {
-                state.questions = shuffle(questionsDatabase);
-                state.index = 0;
-            }
-
-            const currentQ = state.questions[state.index];
-            const suffix = team.toLowerCase();
-
-            document.getElementById(`q-number-${suffix}`).innerText = `Pergunta ${state.index + 1}`;
-            document.getElementById(`q-text-${suffix}`).innerText = currentQ.q;
-
-            const container = document.getElementById(`options-${suffix}`);
-            container.innerHTML = '';
-
-            const letters = ['A', 'B', 'C', 'D'];
-            currentQ.options.forEach((optText, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-
-                // MULTI-TOUCH OTIMIZADO PARA TV
-                btn.onpointerdown = (e) => {
-                    e.preventDefault();
-                    handleTeamAnswer(team, i, btn);
-                };
-
-                btn.innerHTML = `
-                    <div class="opt-letter">${letters[i]}</div>
-                    <div>${optText}</div>
-                `;
-                container.appendChild(btn);
-            });
-        }
-
-        // PROCESSAR RESPOSTA INDEPENDENTE
-        function handleTeamAnswer(team, selectedIndex, btnElement) {
-            const state = (team === 'A') ? stateA : stateB;
-
-            if (state.isBlocked) return;
-            state.isBlocked = true;
-
-            const currentQ = state.questions[state.index];
-
-            // PONTUAÇÃO: +2 por acerto, -1 por erro
-            if (selectedIndex === currentQ.correct) {
-                playSound('correct');
-                btnElement.classList.add('opt-correct');
-                state.score += 2;
-                updateScores();
+            if (config.timerDuration > 0) {
+                timerInterval = setInterval(() => {
+                    timerSeconds--;
+                    updateTimerDisplay();
+                    if (timerSeconds <= 0) {
+                        endGame();
+                    }
+                }, 1000);
             } else {
-                playSound('wrong');
-                btnElement.classList.add('opt-wrong');
-                state.score -= 1;
-                updateScores();
+                document.getElementById('timer-display').innerText = '∞ LIVRE';
+            }
+        }
+
+        // CONSTRUIR COMPONENTE DO TABULEIRO
+        function buildGrid(team) {
+            const gridContainer = document.getElementById(`grid-${team.toLowerCase()}`);
+            gridContainer.innerHTML = '';
+            
+            // Configurar CSS Grid proporcional ao tamanho selecionado
+            gridContainer.style.gridTemplateColumns = `repeat(${config.gridSize}, 1fr)`;
+            gridContainer.style.gridTemplateRows = `repeat(${config.gridSize}, 1fr)`;
+
+            const state = (team === 'A') ? stateA : stateB;
+            state.gridData = [];
+
+            let isDragging = false;
+
+            // Prevenir comportamento padrão de arrasto em telas touch
+            gridContainer.addEventListener('pointerdown', () => { isDragging = true; });
+            window.addEventListener('pointerup', () => { isDragging = false; });
+
+            for (let r = 0; r < config.gridSize; r++) {
+                const rowArr = [];
+                for (let c = 0; c < config.gridSize; c++) {
+                    const numVal = getRandomNumber();
+                    const cellEl = document.createElement('div');
+                    cellEl.className = 'cell';
+                    cellEl.innerText = numVal;
+                    cellEl.dataset.row = r;
+                    cellEl.dataset.col = c;
+
+                    // Handlers para clique e arrasto (Pointer Events)
+                    cellEl.onpointerdown = (e) => {
+                        e.preventDefault();
+                        handleCellInteraction(team, r, c);
+                    };
+
+                    cellEl.onpointerenter = (e) => {
+                        if (isDragging) {
+                            handleCellInteraction(team, r, c);
+                        }
+                    };
+
+                    gridContainer.appendChild(cellEl);
+                    rowArr.push({ val: numVal, element: cellEl });
+                }
+                state.gridData.push(rowArr);
+            }
+        }
+
+        // LÓGICA DE SELEÇÃO CONTÍGUA
+        function handleCellInteraction(team, row, col) {
+            const state = (team === 'A') ? stateA : stateB;
+            if (state.isBlocked) return;
+
+            const path = state.selectedPath;
+            const lastCell = path.length > 0 ? path[path.length - 1] : null;
+
+            // Se a célula já está na seleção
+            const existingIndex = path.findIndex(p => p.row === row && p.col === col);
+
+            if (existingIndex !== -1) {
+                // Se clicou no penúltimo item, permite desfazer a última escolha (backtrack)
+                if (existingIndex === path.length - 2) {
+                    const removed = path.pop();
+                    state.gridData[removed.row][removed.col].element.classList.remove('selected');
+                    playSound('select');
+                    updateCurrentSum(team);
+                }
+                return;
             }
 
-            setTimeout(() => {
-                state.index++;
-                state.isBlocked = false;
-                renderTeamQuestion(team);
-            }, 350);
+            // Se for a primeira célula do caminho
+            if (!lastCell) {
+                path.push({ row, col });
+                state.gridData[row][col].element.classList.add('selected');
+                playSound('select');
+                updateCurrentSum(team);
+                checkSumState(team);
+                return;
+            }
+
+            // Verificar se a célula é CONTÍGUA (adjacente na horizontal, vertical ou diagonal)
+            const rowDiff = Math.abs(row - lastCell.row);
+            const colDiff = Math.abs(col - lastCell.col);
+
+            if (rowDiff <= 1 && colDiff <= 1 && (rowDiff + colDiff > 0)) {
+                path.push({ row, col });
+                state.gridData[row][col].element.classList.add('selected');
+                playSound('select');
+                updateCurrentSum(team);
+                checkSumState(team);
+            }
+        }
+
+        // CALCULAR SOMA ATUAL E VERIFICAR
+        function getCurrentSumValue(team) {
+            const state = (team === 'A') ? stateA : stateB;
+            return state.selectedPath.reduce((acc, pos) => acc + state.gridData[pos.row][pos.col].val, 0);
+        }
+
+        function updateCurrentSum(team) {
+            const currentVal = getCurrentSumValue(team);
+            const state = (team === 'A') ? stateA : stateB;
+            const displayEl = document.getElementById(`current-${team.toLowerCase()}`);
+
+            displayEl.innerText = currentVal;
+
+            if (currentVal === state.target) {
+                displayEl.className = 'current-val match';
+            } else if (currentVal > state.target) {
+                displayEl.className = 'current-val overflow';
+            } else {
+                displayEl.className = 'current-val';
+            }
+        }
+
+        function checkSumState(team) {
+            const state = (team === 'A') ? stateA : stateB;
+            const sum = getCurrentSumValue(team);
+
+            // Requisito: Pelo menos 2 números para formar a soma
+            if (sum === state.target && state.selectedPath.length >= 2) {
+                // ACERTO!
+                state.isBlocked = true;
+                playSound('correct');
+
+                // Pontuação extra para caminhos maiores
+                const pointsEarned = state.selectedPath.length * 10;
+                state.score += pointsEarned;
+                updateScores();
+
+                // Animar acerto e substituir células
+                state.selectedPath.forEach(pos => {
+                    const cellObj = state.gridData[pos.row][pos.col];
+                    cellObj.element.classList.remove('selected');
+                    cellObj.element.classList.add('correct-flash');
+                });
+
+                setTimeout(() => {
+                    state.selectedPath.forEach(pos => {
+                        const cellObj = state.gridData[pos.row][pos.col];
+                        const newVal = getRandomNumber();
+                        cellObj.val = newVal;
+                        cellObj.element.innerText = newVal;
+                        cellObj.element.classList.remove('correct-flash');
+                    });
+
+                    state.selectedPath = [];
+                    state.isBlocked = false;
+
+                    // Se a regra for alvo dinâmico, altera o alvo a cada acerto
+                    if (config.targetType === 'dynamic') {
+                        state.target = Math.floor(Math.random() * 15) + 10; // Alvo entre 10 e 25
+                        updateTargetDisplay(team);
+                    }
+
+                    updateCurrentSum(team);
+                }, 400);
+
+            } else if (sum > state.target) {
+                // ERRO - PASSOU DA SOMA ALVO!
+                state.isBlocked = true;
+                playSound('wrong');
+
+                state.selectedPath.forEach(pos => {
+                    const cellObj = state.gridData[pos.row][pos.col];
+                    cellObj.element.classList.remove('selected');
+                    cellObj.element.classList.add('wrong-flash');
+                });
+
+                setTimeout(() => {
+                    state.selectedPath.forEach(pos => {
+                        const cellObj = state.gridData[pos.row][pos.col];
+                        cellObj.element.classList.remove('wrong-flash');
+                    });
+
+                    state.selectedPath = [];
+                    state.isBlocked = false;
+                    updateCurrentSum(team);
+                }, 400);
+            }
+        }
+
+        // LIMPAR SELEÇÃO MANUALMENTE
+        function clearSelection(team) {
+            const state = (team === 'A') ? stateA : stateB;
+            if (state.isBlocked) return;
+
+            state.selectedPath.forEach(pos => {
+                state.gridData[pos.row][pos.col].element.classList.remove('selected');
+            });
+            state.selectedPath = [];
+            updateCurrentSum(team);
         }
 
         function updateScores() {
@@ -517,13 +925,20 @@
             document.getElementById('score-b').innerText = stateB.score;
         }
 
+        function updateTargetDisplay(team) {
+            const state = (team === 'A') ? stateA : stateB;
+            document.getElementById(`target-${team.toLowerCase()}`).innerText = state.target;
+        }
+
         function updateTimerDisplay() {
+            if (config.timerDuration === 0) return;
+
             const display = document.getElementById('timer-display');
             const mins = Math.floor(timerSeconds / 60);
             const secs = timerSeconds % 60;
             display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
-            if (timerSeconds <= 30) {
+            if (timerSeconds <= 20) {
                 display.classList.add('warning');
             } else {
                 display.classList.remove('warning');
@@ -536,39 +951,35 @@
             const title = document.getElementById('final-title');
             const desc = document.getElementById('final-desc');
 
-            if (stateA.score > stateB.score) {
-                title.innerText = '🟦 VITÓRIA DA EQUIPE AZUL!';
-                title.style.color = '#38bdf8';
-                desc.innerHTML = `
-                    A Equipe Azul venceu pelo placar de <strong>${stateA.score} x ${stateB.score}</strong> pontos!
-                `;
-            } else if (stateB.score > stateA.score) {
-                title.innerText = '🟩 VITÓRIA DA EQUIPE VERDE!';
-                title.style.color = '#4ade80';
-                desc.innerHTML = `
-                    A Equipe Verde venceu pelo placar de <strong>${stateB.score} x ${stateA.score}</strong> pontos!
-                `;
-            } else {
-                title.innerText = '🤝 EMPATE IMPRESSIONANTE!';
+            if (config.mode === 'solo') {
+                title.innerText = '🎉 DESAFIO CONCLUÍDO!';
                 title.style.color = '#facc15';
-                desc.innerHTML = `
-                    As duas equipes empataram com incríveis <strong>${stateA.score} pontos</strong> cada!
-                `;
+                desc.innerHTML = `Sua pontuação final foi de <strong>${stateA.score} pontos</strong>!`;
+            } else {
+                if (stateA.score > stateB.score) {
+                    title.innerText = '🟦 VITÓRIA DA EQUIPE AZUL!';
+                    title.style.color = '#38bdf8';
+                    desc.innerHTML = `A Equipe Azul venceu com <strong>${stateA.score}</strong> pontos contra <strong>${stateB.score}</strong> da Equipe Verde!`;
+                } else if (stateB.score > stateA.score) {
+                    title.innerText = '🟩 VITÓRIA DA EQUIPE VERDE!';
+                    title.style.color = '#4ade80';
+                    desc.innerHTML = `A Equipe Verde venceu com <strong>${stateB.score}</strong> pontos contra <strong>${stateA.score}</strong> da Equipe Azul!`;
+                } else {
+                    title.innerText = '🤝 EMPATE IMPRESSIONANTE!';
+                    title.style.color = '#facc15';
+                    desc.innerHTML = `Ambas as equipes empataram com incríveis <strong>${stateA.score} pontos</strong>!`;
+                }
             }
 
             document.getElementById('screen-final').classList.remove('hidden');
         }
 
-        // BINDING DOS BOTÕES COM POINTERDOWN
-        document.getElementById('btn-start-game').onpointerdown = (e) => {
-            e.preventDefault();
-            startGame();
-        };
+        // BINDINGS DOS BOTÕES DE INTERAÇÃO E LIMPEZA
+        document.getElementById('btn-clear-a').onpointerdown = (e) => { e.preventDefault(); clearSelection('A'); };
+        document.getElementById('btn-clear-b').onpointerdown = (e) => { e.preventDefault(); clearSelection('B'); };
 
-        document.getElementById('btn-restart').onpointerdown = (e) => {
-            e.preventDefault();
-            startGame();
-        };
+        document.getElementById('btn-start-game').onpointerdown = (e) => { e.preventDefault(); startGame(); };
+        document.getElementById('btn-restart').onpointerdown = (e) => { e.preventDefault(); startGame(); };
     </script>
 </body>
 </html>
