@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Batalha Simultânea de Informática</title>
+    <title>Batalha Simultânea: Raciocínio Lógico</title>
     <style>
         * {
             box-sizing: border-box;
@@ -134,11 +134,26 @@
             padding: 15px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            min-height: 110px;
+            min-height: 120px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
+
+        .q-tag {
+            align-self: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-fracoes { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+        .tag-proporcoes { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid #a855f7; }
+        .tag-conjuntos { background: rgba(236, 72, 153, 0.2); color: #f472b6; border: 1px solid #ec4899; }
 
         .q-number {
             font-size: 0.85rem;
@@ -149,10 +164,10 @@
         }
 
         .q-text {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #f8fafc;
-            line-height: 1.3;
+            line-height: 1.35;
         }
 
         .options-grid {
@@ -176,7 +191,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            min-height: 60px;
+            min-height: 58px;
         }
 
         .opt-letter {
@@ -223,24 +238,39 @@
         .hidden { display: none !important; }
 
         .modal-title {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 900;
             margin-bottom: 15px;
             color: #facc15;
         }
 
         .modal-desc {
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             color: #cbd5e1;
-            margin-bottom: 30px;
-            max-width: 700px;
-            line-height: 1.4;
+            margin-bottom: 25px;
+            max-width: 720px;
+            line-height: 1.5;
+        }
+
+        .topic-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.95rem;
         }
 
         .btn-start {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             color: white;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
             padding: 16px 45px;
             border: none;
@@ -275,6 +305,7 @@
         <section class="team-side side-a">
             <div class="team-title">🟦 EQUIPE AZUL</div>
             <div class="question-card">
+                <span class="q-tag tag-fracoes" id="tag-a">FRAÇÕES</span>
                 <div class="q-number" id="q-number-a">Pergunta 1</div>
                 <div class="q-text" id="q-text-a">Aguardando início...</div>
             </div>
@@ -287,6 +318,7 @@
         <section class="team-side side-b">
             <div class="team-title">🟩 EQUIPE VERDE</div>
             <div class="question-card">
+                <span class="q-tag tag-fracoes" id="tag-b">FRAÇÕES</span>
                 <div class="q-number" id="q-number-b">Pergunta 1</div>
                 <div class="q-text" id="q-text-b">Aguardando início...</div>
             </div>
@@ -296,13 +328,20 @@
 
     <!-- TELA INICIAL -->
     <div class="overlay" id="screen-start">
-        <div class="modal-title">⚡ BATALHA SIMULTÂNEA DIGITAL</div>
+        <div class="modal-title">🧠 BATALHA DE RACIOCÍNIO LÓGICO</div>
+        
+        <div class="topic-badges">
+            <span class="badge tag-fracoes">🍰 FRAÇÕES</span>
+            <span class="badge tag-proporcoes">⚖️ PROPORÇÕES</span>
+            <span class="badge tag-conjuntos">⭕ CONJUNTOS</span>
+        </div>
+
         <div class="modal-desc">
-            As duas equipes jogarão <strong>ao mesmo tempo</strong> na TV Interativa!<br><br>
-            Cada lado possui suas próprias perguntas. Vocês têm <strong>3 minutos (180 segundos)</strong> para responder o máximo de questões possíveis.<br><br>
+            As duas equipes jogarão <strong>ao mesmo tempo</strong> na tela interativa!<br><br>
+            Resolva questões de raciocínio rápido em <strong>3 minutos (180 segundos)</strong>.<br><br>
             <span style="color: #4ade80;">🎯 Cada acerto: <strong>+2 pontos</strong></span> | <span style="color: #f87171;">❌ Cada erro: <strong>-1 ponto</strong></span>
         </div>
-        <button class="btn-start" id="btn-start-game">INICIAR PARTIDA 🚀</button>
+        <button class="btn-start" id="btn-start-game">INICIAR BATALHA 🚀</button>
     </div>
 
     <!-- TELA FINAL -->
@@ -313,68 +352,223 @@
     </div>
 
     <script>
-        // BANCO DE PERGUNTAS
+        // BANCO DE PERGUNTAS DE RACIOCÍNIO LÓGICO
         const questionsDatabase = [
-            { q: "Qual é a função principal de um Sistema Operacional?", options: ["Gerenciar o hardware e rodar programas", "Editar fotos e criar vídeos", "Navegar na internet sem rede", "Proteger o monitor contra poeira"], correct: 0 },
-            { q: "O que é a Área de Trabalho (Desktop)?", options: ["Uma pasta de vírus oculta", "A tela inicial após a inicialização", "O aplicativo de digitar texto", "O gabinete físico do PC"], correct: 1 },
-            { q: "Qual elemento exibe os programas abertos e o relógio?", options: ["Painel de Controle", "Barra de Tarefas", "Bloco de Notas", "Lixeira"], correct: 1 },
-            { q: "O que é um 'Atalho' no Sistema Operacional?", options: ["Um programa de limpeza", "Um arquivo corrompido", "Um ícone com seta para acesso rápido", "Uma tecla que desliga a TV"], correct: 2 },
-            { q: "Para que servem os Diretórios (Pastas)?", options: ["Para armazenar energia", "Para organizar e agrupar arquivos", "Para acelerar o Wi-Fi", "Para criar gráficos automáticos"], correct: 1 },
-            { q: "O que acontece ao 'Compactar' um arquivo (ZIP/RAR)?", options: ["O arquivo é excluído", "Sua cor é alterada", "O tamanho é reduzido para economizar espaço", "Ele vira uma imagem JPEG"], correct: 2 },
-            { q: "O que é considerado um 'Acessório' do sistema?", options: ["O teclado e o mouse", "A Calculadora ou Bloco de Notas", "O monitor de tela curva", "A placa de vídeo"], correct: 1 },
-            { q: "Para que serve a ferramenta 'Limpeza de Disco'?", options: ["Limpar a tela física", "Remover arquivos temporários inutilizados", "Formatar o computador", "Organizar os ícones da tela"], correct: 1 },
-            { q: "O que significa 'Letramento Digital'?", options: ["Digitar rápido sem olhar", "Usar a tecnologia com autonomia e ética", "Ter mais de dois computadores", "Saber consertar eletrônicos"], correct: 1 },
-            { q: "Para onde vão os arquivos excluídos do computador?", options: ["Menu Iniciar", "Lixeira", "Downloads", "Nuvem"], correct: 1 },
-            { q: "Qual recurso ajusta o início de um parágrafo?", options: ["Recuo de Parágrafo", "Quebra de Página", "Marcadores", "Sombreamento"], correct: 0 },
-            { q: "O que faz a 'Quebra de Página'?", options: ["Apaga a página atual", "Envia o texto seguinte para a próxima página", "Divide a folha ao meio", "Imprime o documento"], correct: 1 },
-            { q: "O que indica uma linha ondulada vermelha sob uma palavra?", options: ["Um link de site", "Texto em negrito", "Um possível erro ortográfico", "Um comando salvo"], correct: 2 },
-            { q: "Para que servem os 'Marcadores e Numeração'?", options: ["Criar listas organizadas em tópicos ou números", "Contar as páginas do texto", "Mudar a cor de fundo", "Inserir bordas na folha"], correct: 0 },
-            { q: "Como dividimos o texto de uma folha em faixas verticais?", options: ["Tabelas", "Formatação em Colunas", "Layout Horizontal", "Espaçamento Duplo"], correct: 1 },
-            { q: "Qual a diferença entre 'Salvar' e 'Salvar Como'?", options: ["Não há diferença", "'Salvar Como' permite alterar o nome ou local", "'Salvar' apaga o arquivo antigo", "'Salvar Como' envia e-mail"], correct: 1 },
-            { q: "O que é a orientação de página no modo 'Paisagem'?", options: ["A folha na vertical (em pé)", "A folha na horizontal (deitada)", "A folha dividida em 4 partes", "Um slide de apresentação"], correct: 1 },
-            { q: "Qual é o atalho de teclado para Copiar um texto?", options: ["Ctrl + V", "Ctrl + X", "Ctrl + C", "Ctrl + Z"], correct: 2 },
-            { q: "O que faz o 'Alinhamento Justificado'?", options: ["Alinha o texto à esquerda", "Centraliza o texto na folha", "Distribui o texto entre as duas margens", "Aumenta o tamanho da letra"], correct: 2 },
-            { q: "Para que serve a 'Barra de Ferramentas / Faixa de Opções'?", options: ["Agrupar os botões de comandos e formatação", "Exibir os e-mails recebidos", "Mostrar a bateria do notebook", "Conectar ao Wi-Fi"], correct: 0 },
-            { q: "Qual é a principal força motriz que caracterizou a transição da Primeira para a Segunda Revolução Industrial?", options: ["A introdução da eletricidade e da produção em massa.", "A integração de sistemas ciber-físicos em redes conectadas.", "A automação de processos via computadores e controladores lógicos.", "O surgimento da tração a vapor e do tear mecânico."], correct: 0 },
-            { q: "Em um contexto de recebimento de cargas no almoxarifado, qual tecnologia habilitadora possibilita a identificação automática de itens sem a necessidade de visada direta?", options: ["Aferição volumétrica a laser.", "Sistemas de visão computacional fixa.", "Código de barras bidimensional (QR Code).", "Identificação por radiofrequência (RFID)."], correct: 3 },
-            { q: "Como a arquitetura de Internet das Coisas (IoT) atua para mitigar gargalos operacionais no recebimento de materiais de uma fábrica?", options: ["Substituindo o uso de galpões físicos por depósitos virtuais.", "Capturando dados de entrada automaticamente e enviando-os ao sistema.", "Permitindo a leitura manual mais rápida por parte dos operadores.", "Eliminando a necessidade de relatórios de conferência de estoque."], correct: 1 },
-            { q: "Qual modelo de serviço em nuvem é indicado quando uma indústria precisa utilizar um sistema WMS pronto, acessado via web sem gerenciar a infraestrutura?", options: ["On-Premise dedicado.", "PaaS (Platform as a Service).", "SaaS (Software as a Service).", "IaaS (Infrastructure as a Service)."], correct: 2 },
-            { q: "Um sistema corporativo que utiliza dados hospedados em nuvem privada combinados com dados de parceiros em nuvem pública adota qual arquitetura de implantação?", options: ["Nuvem Privada Exclusiva.", "Nuvem Híbrida.", "Nuvem Comunitária.", "Nuvem Multiusuário Local."], correct: 1 },
-            { q: "No conceito dos 5 Vs do Big Data, a dimensão que trata do alinhamento e da precisão técnica das informações coletadas é chamada de:", options: ["Velocidade.", "Variedade.", "Veracidade.", "Valor."], correct: 2 },
-            { q: "Como o uso do Big Data Analytics e da Inteligência Artificial otimiza o planejamento e reposição de estoques na gestão logística?", options: ["Identificando padrões e realizando previsão preditiva de demanda.", "Aumentando o limite físico de armazenamento dos galpões.", "Substituindo completamente o transporte físico de cargas.", "Eliminando a necessidade de emissão de notas fiscais."], correct: 0 },
-            { q: "Qual das seguintes alternativas descreve uma característica distintiva dos Robôs Móveis Autônomos (AMRs) em relação aos veículos guiados automatizados (AGVs) convencionais?", options: ["Necessidade de trilhos magnéticos fixos no piso.", "Navegação dinâmica com desvio autônomo de obstáculos sem rotas fixas.", "Operação exclusivamente manual controlada por um operador.", "Incapacidade de se conectar a redes sem fio ou sensores."], correct: 1 },
-            { q: "A Manufatura Aditiva (impressão 3D) traz qual benefício direto para a gestão de reposição de peças sobressalentes na logística?", options: ["Eliminação de qualquer tipo de material plástico ou metálico.", "Necessidade de transporte marítimo internacional obrigatório.", "Possibilidade de produzir peças sob demanda reduzindo o estoque de segurança.", "Aumento do tempo de espera do cliente final."], correct: 2 },
-            { q: "Qual é o principal objetivo do conceito de Gêmeo Digital (Digital Twin) aplicado a um Centro de Distribuição?", options: ["Criar uma réplica virtual para simular e otimizar processos antes de alterações físicas.", "Substituir fisicamente os funcionários do setor de picking.", "Reduzir a velocidade das esteiras transportadoras.", "Eliminar a necessidade de conexão com a internet."], correct: 0 },
-            { q: "A integração horizontal de sistemas em uma cadeia de suprimentos conectada caracteriza-se por:", options: ["Conexão e compartilhamento de informações entre fornecedores, fábrica e cliente final.", "Comunicação exclusiva entre o sensor do chão de fábrica e o controlador do robô.", "Isolamento de dados dentro de um único departamento da empresa.", "Substituição completa do sistema ERP por planilhas manuais."], correct: 0 },
-            { q: "Qual pilar da Segurança Digital garante que a informação esteja acessível para usuários autorizados sempre que for requerida?", options: ["Confidencialidade.", "Integridade.", "Disponibilidade.", "Não repúdio."], correct: 2 },
-            { q: "A garantia de que o autor de uma transação digital não possa negar ter realizado essa operação refere-se a qual requisito de segurança?", options: ["Não repúdio.", "Privacidade.", "Legalidade.", "Anulabilidade."], correct: 0 },
-            { q: "Na operação logística de separação de pedidos (picking), a Realidade Aumentada (RA) diferencia-se da Realidade Virtual (RV) porque a RA:", options: ["Cria um ambiente 100% digital e isola o usuário do mundo real.", "Sobrepõe elementos gráficos e instruções digitais diretamente na visão do mundo real.", "Elimina a necessidade de qualquer dispositivo tecnológico.", "Substitui os sistemas WMS e ERP por comandos manuais."], correct: 1 },
-            { q: "A aplicação da tecnologia de Pick-by-Vision no setor de separação de mercadorias utiliza de forma proeminente qual destas soluções?", options: ["Óculos inteligentes que projetam localização e quantidade a ser coletada.", "Leitores fixos de código de barras em mesas de escritório.", "Impressoras 3D industriais de grande porte.", "Servidores locais isolados sem conexão à internet."], correct: 0 },
-            { q: "Qual das alternativas representa uma integração vertical completa do chão de fábrica até a alta gestão na Indústria 4.0?", options: ["Sensores nos equipamentos enviando métricas ao MES e sincronizando com o ERP.", "Uso de papéis para anotação diária de produção enviada semanalmente por e-mail.", "Isolamento total dos dados de produção em relação ao sistema financeiro.", "Envio de relatórios físicos de estoque diretamente aos fornecedores."], correct: 0 },
-            { q: "Para garantir a conformidade com a legislação de proteção de dados (como a LGPD) na movimentação e separação de pedidos, a empresa deve:", options: ["Compartilhar livremente dados de clientes com qualquer parceiro não autorizado.", "Restringir o acesso a dados pessoais e adotar protocolos fortes de anonimização e segurança.", "Armazenar senhas e documentos em papéis visíveis no setor de expedição.", "Ignorar auditorias de segurança cibernética."], correct: 1 },
-            { q: "A Mineração de Dados (Data Mining) dentro de uma base de gestão logística atua para:", options: ["Descobrir padrões ocultos, correlações e anomalias em grandes conjuntos de dados.", "Destruir dados antigos sem necessidade de backup.", "Aumentar manualmente o tempo de digitação de notas fiscais.", "Reduzir a velocidade de transmissão de redes sem fio."], correct: 0 },
-            { q: "Ao planejar a implementação de robótica avançada no recebimento de um armazém, o fator prioritário de segurança no trabalho é:", options: ["Desativar os sensores de proximidade dos robôs para aumentar a velocidade.", "Equipar os sistemas autônomos com sensores de presença e parada de emergência integrados.", "Permitir a circulação de pedestres em rotas de alta velocidade sem sinalização.", "Remover proteções físicas de partes móveis dos robôs."], correct: 1 },
-            { q: "A convergência entre IoT, Computação em Nuvem, Big Data, Robótica e Realidade Aumentada na logística visa principalmente:", options: ["Aumentar a visibilidade da operação, flexibilidade e eficiência em tempo real na cadeia logística.", "Aumentar os custos operacionais e desacelerar a entrega de mercadorias.", "Eliminar o uso de qualquer tipo de software de gestão empresarial.", "Isolar as indústrias dos seus fornecedores e clientes."], correct: 0 },
-            { q: "Qual é a definição legal de acidente de trabalho segundo a legislação previdenciária brasileira?", options: ["Aquele que ocorre pelo exercício do trabalho a serviço da empresa, provocando lesão corporal ou perturbação funcional.", "Qualquer imprevisto que ocorra no trajeto de ida ou volta do trabalho usando transporte público.", "Um evento indesejado que causa apenas danos materiais aos equipamentos da empresa.", "Qualquer doença crônica adquirida pelo trabalhador ao longo de sua vida adulta."], correct: 0 },
-            { q: "Os ruídos intensos, vibrações, temperaturas extremas (frio/calor) e radiações são classificados como agentes de risco:", options: ["Químicos.", "Biológicos.", "Físicos.", "Ergonômicos."], correct: 2 },
-            { q: "Poeiras, fumos, névoas, gases e vapores que podem penetrar no organismo pela via respiratória são exemplos de agentes:", options: ["Físicos.", "Químicos.", "Biológicos.", "Mecânicos."], correct: 1 },
-            { q: "Qual das alternativas apresenta um exemplo de Equipamento de Proteção Coletiva (EPC)?", options: ["Óculos de proteção contra respingos.", "Exaustor de ar em ambiente fechado.", "Protetor auricular do tipo plug.", "Luvas de vaqueta para manuseio de cargas."], correct: 1 },
-            { q: "A principal função do Mapa de Riscos em uma empresa ou ambiente logístico é:", options: ["Listar os salários e cargos de todos os funcionários da empresa.", "Representar graficamente os locais de trabalho e os riscos presentes de forma visível aos trabalhadores.", "Registrar as horas extras efetuadas pelos funcionários do almoxarifado.", "Substituir a necessidade de uso de Equipamentos de Proteção Individual (EPI)."], correct: 1 },
-            { q: "O programa focado na antecipação, reconhecimento, avaliação e controle dos riscos ambientais no trabalho é o:", options: ["PPCI (Plano de Prevenção Contra Incêndios).", "PPRA (Programa de Prevenção de Riscos Ambientais).", "5S (Programa de Qualidade).", "CLT (Consolidação das Leis do Trabalho)."], correct: 1 },
-            { q: "Em uma sinalização de segurança, as cores e símbolos nos ambientes industriais têm como objetivo primário:", options: ["Aumentar a iluminação estética do galpão de armazenamento.", "Alertar, alertar sobre perigos e indicar rotas de fuga e equipamentos de emergência.", "Apenas orientar visitantes externos que não conhecem a empresa.", "Decorar os corredores de circulação do setor de expedicão."], correct: 1 },
-            { q: "Qual documento tem por finalidade estabelecer a rotina de segurança e o plano de ação no combate a emergências de fogo em uma edificação?", options: ["PPCI (Plano de Prevenção e Combate a Incêndio).", "Prontuário Médico de Saúde Ocupacional.", "Contrato Individual de Trabalho.", "Mapa de Cotação de Preços."], correct: 0 },
-            { q: "Bactérias, vírus, fungos e parasitas presentes em determinadas atividades profissionais constituem os riscos:", options: ["Físicos.", "Ergonômicos.", "Biológicos.", "Operacionais."], correct: 2 },
-            { q: "A utilização prioritária de Equipamentos de Proteção Coletiva (EPC) em relação aos Equipamentos de Proteção Individual (EPI) justifica-se porque o EPC:", options: ["É sempre mais barato para o empregador adquirir.", "Protege o ambiente e a coletividade de trabalhadores simultaneamente na fonte de risco.", "Elimina a obrigação de treinamentos de segurança.", "É de uso individualizado para cada funcionário do turno."], correct: 1 },
-            { q: "Um trabalhador que realiza levantamento e transporte manual de peso de forma inadequada está sujeito prioritariamente a riscos de natureza:", options: ["Química.", "Ergonômica.", "Biológica.", "Radioativa."], correct: 1 },
-            { q: "A Consolidação das Leis do Trabalho (CLT) garante ao trabalhador contratado em regime formal:", options: ["Jornada de trabalho limitada, repouso semanal remunerado e férias garantidas por lei.", "Isenção total do uso de EPIs em ambientes perigosos.", "A obrigação de cumprir horas extras sem remuneração adicional.", "Trabalho sem limite de horas diárias no setor logístico."], correct: 0 },
-            { q: "O comportamento seguro no ambiente de trabalho envolve prioritariamente:", options: ["Focar apenas na produtividade sem atenção às normas internas.", "Adotar atitudes conscientes e cumprir procedimentos técnicos e normas de segurança.", "Delegar a responsabilidade pela própria segurança apenas ao técnico de SST.", "Usar os EPIs apenas quando a fiscalização estiver presente."], correct: 1 },
-            { q: "Qual a importância do descarte correto e da reciclagem de resíduos industriais na gestão logística ambiental?", options: ["Evitar a contaminação ambiental e cumprir o uso racional de recursos.", "Aumentar a geração de lixo no almoxarifado.", "Substituir os treinamentos de prevenção de acidentes.", "Reduzir o espaço físico necessário para a armazenagem."], correct: 0 },
-            { q: "Ao atuar na movimentação e armazenagem de produtos perigosos, o operador deve verificar prioritariamente:", options: ["A cor da embalagem sem ler as etiquetas de sinalização.", "A FISPQ (Ficha de Informação de Segurança de Produtos Químicos) e a sinalização de risco específica.", "Apenas o peso bruto da carga.", "Se o produto pode ser transportado sem o uso de luvas ou óculos."], correct: 1 },
-            { q: "Inspeções periódicas de segurança nas áreas operacionais e de armazenagem servem para:", options: ["Identificar antecipadamente condições inseguras ou desvios antes que ocorram acidentes.", "Punir financeiramente os funcionários com mais tempo de casa.", "Aumentar o tempo de movimentação de cargas na expedição.", "Gerar relatórios de estoque para o setor de compras."], correct: 0 },
-            { q: "Qual das alternativas representa um exemplo de energia renovável aplicada ao uso racional de recursos em galpões logísticos?", options: ["Uso contínuo de geradores a óleo diesel sem filtros.", "Instalação de sistemas de iluminação e geração por energia solar fotovoltaica.", "Descarte de lâmpadas fluorescentes no lixo comum.", "Manutenção de lâmpadas incandescentes acesas 24 horas por dia."], correct: 1 },
-            { q: "A obrigatoriedade do fornecimento gratuito de Equipamento de Proteção Individual (EPI) adequado ao risco é de responsabilidade do:", options: ["Próprio trabalhador.", "Sindicato da categoria.", "Empregador.", "Fabricante do maquinário."], correct: 2 },
-            { q: "O que caracteriza o 'acidente de trajeto' no contexto da segurança do trabalho?", options: ["Aquele sofrido pelo empregado no percurso da sua residência para o local de trabalho ou vice-versa.", "O acidente sofrido exclusivamente dentro da empresa durante o horário de almoço.", "Uma colisão de veículos envolvendo terceiros fora da rota habitual.", "Qualquer mal-estar sofrido durante as férias regulamentares."], correct: 0 },
-            { q: "A promoção de hábitos saudáveis, gestão do estresse e vacinação no ambiente ocupacional visam promover:", options: ["Apenas a redução do custo com vale-transporte.", "A qualidade de vida no trabalho e a saúde integral do trabalhador.", "O aumento obrigatório da jornada de trabalho semanal.", "A substituição dos Equipamentos de Proteção Coletiva."], correct: 1 }
+            // --- FRAÇÕES ---
+            { 
+                category: "Frações", 
+                tagClass: "tag-fracoes",
+                q: "Se 1/4 dos alunos da turma jogam xadrez e a turma tem 32 alunos, quantos jogam xadrez?", 
+                options: ["6 alunos", "8 alunos", "10 alunos", "12 alunos"], 
+                correct: 1 
+            },
+            { 
+                category: "Frações", 
+                tagClass: "tag-fracoes",
+                q: "Uma pizza foi dividida em 8 pedaços iguais. Lucas comeu 3 pedaços. Qual fração sobrou?", 
+                options: ["3/8", "5/8", "1/2", "3/5"], 
+                correct: 1 
+            },
+            { 
+                category: "Frações", 
+                tagClass: "tag-fracoes",
+                q: "Qual fração é maior: 2/5 ou 3/4?", 
+                options: ["2/5", "3/4", "São iguais", "Depende do total"], 
+                correct: 1 
+            },
+            { 
+                category: "Frações", 
+                tagClass: "tag-fracoes",
+                q: "Maria gastou 2/3 de R$ 90,00 comprando livros. Quanto sobrou para ela?", 
+                options: ["R$ 30,00", "R$ 60,00", "R$ 45,00", "R$ 20,00"], 
+                correct: 0 
+            },
+            { 
+                category: "Frações", 
+                tagClass: "tag-fracoes",
+                q: "Simplificando a fração 12/18 até a sua forma irredutível, obtemos:", 
+                options: ["6/9", "3/4", "2/3", "4/6"], 
+                correct: 2 
+            },
+            { 
+                category: "Frações", 
+                tagClass: "tag-fracoes",
+                q: "Qual o resultado de 1/2 + 1/4?", 
+                options: ["2/6", "3/4", "2/4", "1/6"], 
+                correct: 1 
+            },
+            { 
+                category: "Frações", 
+                tagClass: "tag-fracoes",
+                q: "Em uma maratona, Pedro percorreu 3/5 do trajeto. Que porcentagem do percurso ele já concluiu?", 
+                options: ["30%", "50%", "60%", "75%"], 
+                correct: 2 
+            },
+            { 
+                category: "Frações", 
+                tagClass: "tag-fracoes",
+                q: "Se 3/8 de uma quantidade equivale a 15 litros, qual é a quantidade total?", 
+                options: ["30 litros", "40 litros", "45 litros", "50 litros"], 
+                correct: 1 
+            },
+            { 
+                category: "Frações", 
+                tagClass: "tag-fracoes",
+                q: "Se você tem 1/2 barra de chocolate e quer dividi-la igualmente entre 2 pessoas, cada uma terá:", 
+                options: ["1/4 da barra", "1/2 da barra", "1/8 da barra", "2/4 da barra"], 
+                correct: 0 
+            },
+            { 
+                category: "Frações", 
+                tagClass: "tag-fracoes",
+                q: "Qual é a fração equivalente a 0,75?", 
+                options: ["1/2", "2/3", "3/4", "4/5"], 
+                correct: 2 
+            },
+
+            // --- PROPORÇÕES ---
+            { 
+                category: "Proporções", 
+                tagClass: "tag-proporcoes",
+                q: "Se 3 torneiras enchem um tanque em 6 horas, quantas horas 6 torneiras com a mesma vazão levariam?", 
+                options: ["12 horas", "9 horas", "3 horas", "2 horas"], 
+                correct: 2 
+            },
+            { 
+                category: "Proporções", 
+                tagClass: "tag-proporcoes",
+                q: "A razão entre meninos e meninas em uma sala é de 2 para 3. Se há 12 meninos, quantas meninas há?", 
+                options: ["15 meninas", "18 meninas", "20 meninas", "24 meninas"], 
+                correct: 1 
+            },
+            { 
+                category: "Proporções", 
+                tagClass: "tag-proporcoes",
+                q: "Um carro percorre 240 km com 20 litros de combustível. Quantos km ele faz por litro?", 
+                options: ["10 km/l", "12 km/l", "15 km/l", "18 km/l"], 
+                correct: 1 
+            },
+            { 
+                category: "Proporções", 
+                tagClass: "tag-proporcoes",
+                q: "Para fazer um bolo para 4 pessoas usam-se 2 ovos. Quantos ovos serão necessários para um bolo de 10 pessoas?", 
+                options: ["4 ovos", "5 ovos", "6 ovos", "8 ovos"], 
+                correct: 1 
+            },
+            { 
+                category: "Proporções", 
+                tagClass: "tag-proporcoes",
+                q: "Se 4 pedreiros constroem um muro em 10 dias, em quantos dias 8 pedreiros construiriam o mesmo muro?", 
+                options: ["5 dias", "8 dias", "12 dias", "20 dias"], 
+                correct: 0 
+            },
+            { 
+                category: "Proporções", 
+                tagClass: "tag-proporcoes",
+                q: "Em um mapa na escala 1:100, uma linha mede 5 cm. Qual o comprimento real dessa linha no mundo real?", 
+                options: ["50 cm", "5 metros", "50 metros", "500 metros"], 
+                correct: 1 
+            },
+            { 
+                category: "Proporções", 
+                tagClass: "tag-proporcoes",
+                q: "Se a proporção A/B é igual a 3/5 e B = 20, qual é o valor de A?", 
+                options: ["9", "12", "15", "18"], 
+                correct: 1 
+            },
+            { 
+                category: "Proporções", 
+                tagClass: "tag-proporcoes",
+                q: "Uma fábrica produz 500 brinquedos em 5 dias. Mantendo o ritmo, quantos brinquedos produzirá em 12 dias?", 
+                options: ["1.000", "1.200", "1.500", "2.000"], 
+                correct: 1 
+            },
+            { 
+                category: "Proporções", 
+                tagClass: "tag-proporcoes",
+                q: "Se a velocidade de um ônibus dobra, o tempo gasto para fazer um percurso fixo fica:", 
+                options: ["Duplicado", "Igual", "Reduzido à metade", "Reduzido à quarta parte"], 
+                correct: 2 
+            },
+            { 
+                category: "Proporções", 
+                tagClass: "tag-proporcoes",
+                q: "Divida 50 em duas partes diretamente proporcionais a 2 e 3. Quais são essas partes?", 
+                options: ["20 e 30", "15 e 35", "25 e 25", "10 e 40"], 
+                correct: 0 
+            },
+
+            // --- CONJUNTOS ---
+            { 
+                category: "Conjuntos", 
+                tagClass: "tag-conjuntos",
+                q: "Dado A = {1, 2, 3} e B = {3, 4, 5}, qual é a Interseção (A ∩ B)?", 
+                options: ["{1, 2, 3, 4, 5}", "{3}", "{1, 2}", "{4, 5}"], 
+                correct: 1 
+            },
+            { 
+                category: "Conjuntos", 
+                tagClass: "tag-conjuntos",
+                q: "Dado A = {1, 2, 3} e B = {3, 4, 5}, qual é a União (A ∪ B)?", 
+                options: ["{3}", "{1, 2, 3, 4, 5}", "{1, 2, 4, 5}", "{1, 5}"], 
+                correct: 1 
+            },
+            { 
+                category: "Conjuntos", 
+                tagClass: "tag-conjuntos",
+                q: "Em um grupo de 30 pessoas, 18 gostam de futebol, 15 de basquete e 8 gostam dos dois. Quantos não gostam de nenhum?", 
+                options: ["3 pessoas", "5 pessoas", "7 pessoas", "10 pessoas"], 
+                correct: 1 
+            },
+            { 
+                category: "Conjuntos", 
+                tagClass: "tag-conjuntos",
+                q: "A diferença entre conjuntos A - B representa:", 
+                options: ["Elementos que pertencem a A e também a B", "Elementos que pertencem a A, mas NÃO a B", "Elementos que pertencem a B, mas NÃO a A", "Todos os elementos de A e B juntos"], 
+                correct: 1 
+            },
+            { 
+                category: "Conjuntos", 
+                tagClass: "tag-conjuntos",
+                q: "Se A = {a, b, c}, quantos subconjuntos possui o conjunto A no total?", 
+                options: ["3", "6", "8", "9"], 
+                correct: 2 
+            },
+            { 
+                category: "Conjuntos", 
+                tagClass: "tag-conjuntos",
+                q: "O que representa o símbolo Ø na Teoria dos Conjuntos?", 
+                options: ["Conjunto Universo", "Conjunto Infinito", "Conjunto Unitário", "Conjunto Vazio"], 
+                correct: 3 
+            },
+            { 
+                category: "Conjuntos", 
+                tagClass: "tag-conjuntos",
+                q: "Em uma sala com 40 alunos, 25 estudam Inglês e 20 estudam Espanhol. Se todos estudam pelo menos uma das duas línguas, quantos estudam ambas?", 
+                options: ["5 alunos", "10 alunos", "15 alunos", "20 alunos"], 
+                correct: 0 
+            },
+            { 
+                category: "Conjuntos", 
+                tagClass: "tag-conjuntos",
+                q: "Dado A = {2, 4, 6, 8} e B = {4, 8}. Podemos afirmar que:", 
+                options: ["A é subconjunto de B (A ⊂ B)", "B é subconjunto de A (B ⊂ A)", "A e B são disjuntos", "A ∩ B = Ø"], 
+                correct: 1 
+            },
+            { 
+                category: "Conjuntos", 
+                tagClass: "tag-conjuntos",
+                q: "Dois conjuntos são chamados de 'Disjuntos' quando:", 
+                options: ["A união deles resulta no conjunto vazio", "A interseção deles é vazia (A ∩ B = Ø)", "Eles possuem os mesmos elementos", "Um está contido dentro do outro"], 
+                correct: 1 
+            },
+            { 
+                category: "Conjuntos", 
+                tagClass: "tag-conjuntos",
+                q: "Se o conjunto A tem 5 elementos e B tem 3 elementos, e A ∩ B = Ø, quantos elementos tem A ∪ B?", 
+                options: ["2", "5", "8", "15"], 
+                correct: 2 
+            }
         ];
 
         // ESTADO INDEPENDENTE DAS EQUIPES
@@ -406,8 +600,8 @@
                     osc.stop(audioCtx.currentTime + 0.2);
                 } else if (type === 'wrong') {
                     osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(120, audioCtx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(130, audioCtx.currentTime + 0.1);
                     gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
                     osc.start();
@@ -458,6 +652,11 @@
             const currentQ = state.questions[state.index];
             const suffix = team.toLowerCase();
 
+            // Atualiza Tag de Categoria
+            const tagEl = document.getElementById(`tag-${suffix}`);
+            tagEl.innerText = currentQ.category;
+            tagEl.className = `q-tag ${currentQ.tagClass}`;
+
             document.getElementById(`q-number-${suffix}`).innerText = `Pergunta ${state.index + 1}`;
             document.getElementById(`q-text-${suffix}`).innerText = currentQ.q;
 
@@ -469,7 +668,7 @@
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
 
-                // MULTI-TOUCH OTIMIZADO PARA TV
+                // MULTI-TOUCH OTIMIZADO PARA TV INTERATIVA
                 btn.onpointerdown = (e) => {
                     e.preventDefault();
                     handleTeamAnswer(team, i, btn);
